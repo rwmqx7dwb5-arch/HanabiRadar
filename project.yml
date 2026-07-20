@@ -53,6 +53,8 @@ targets:
       - path: HanabiRadarTests
     dependencies:
       - target: HanabiRadar
+      - package: HanabiCore
+        product: HanabiCore
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.hanabiradar.tests

@@ -34,6 +34,12 @@ struct RootView: View {
                 .buttonStyle(.borderedProminent)
                 .accessibilityIdentifier("go-measurement")
 
+                NavigationLink("結果画面（デモ）へ") {
+                    DemoResultScreen()
+                }
+                .buttonStyle(.bordered)
+                .accessibilityIdentifier("go-result")
+
                 Text("この画面は骨組みです。測定・結果・地図・履歴のUIは後続で実装します。")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
