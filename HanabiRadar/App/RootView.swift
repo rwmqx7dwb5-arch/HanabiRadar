@@ -40,6 +40,12 @@ struct RootView: View {
                 .buttonStyle(.bordered)
                 .accessibilityIdentifier("go-result")
 
+                NavigationLink("履歴（デモ）へ") {
+                    DemoHistoryScreen()
+                }
+                .buttonStyle(.bordered)
+                .accessibilityIdentifier("go-history")
+
                 Text("この画面は骨組みです。測定・結果・地図・履歴のUIは後続で実装します。")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
