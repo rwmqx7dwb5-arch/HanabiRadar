@@ -133,6 +133,7 @@ Python 標準ライブラリのみで同じ数式を独立実装し、合成fixt
 - [x] 誤差範囲の算出（`UncertaintyEstimator`）
 - [x] 複数発クラスタリング（`LaunchAreaClusterer`）
 - [x] 複数発のセッション集約（コア・`SessionAggregator`：信頼度ゲート＋加重DBSCAN＋代表統計・`SessionAggregatorTests`）
+- [x] 測定準備アセスメント（コア・`CalibrationAssessor`：精度→測定可能/精度低下/測定困難＋限定要因・`CalibrationAssessorTests`）
 - [x] 地上高の解決機構（コア・`ElevationProviding`）と地表標高欠如時の非表示（`ElevationTests`）
 - [x] 独立実装（Python 参照オラクル）による数理クロス検証と合成fixture（§24.2）
 - [x] 誠実な表示ゲーティング（コア・`EstimateReporter`：信頼度・95%楕円→表示精度／気象一部未適用／地上高有無・`EstimateReportTests`）

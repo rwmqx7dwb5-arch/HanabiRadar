@@ -213,3 +213,17 @@ subpoint.altitude = g
 
 再生成: `python tools/reference/hanabi_reference.py`。Python は乱数・時刻に依存しないため出力は決定論的で、
 生成物はリポジトリにコミットする。
+
+## 11. 測定準備アセスメント（`CalibrationAssessor`・決定ロジック）
+
+数理ではなく「測るべきか」の決定を、UI 任せにせずコアで単体検証する（§22・§16.2）。ライブの
+`SensorQuality`（GPS 水平精度・真方位精度・姿勢有無・カメラ内部行列有無・フレームレート・音声入力レベル・
+オーディオルート）から `ReadinessAssessment` を返す:
+
+- **測定困難（blocked）**: 位置/方位/姿勢のいずれかが取得不能、または水平/方位精度が使用上限を超える。
+- **精度低下（degraded）**: 精度が「良好」閾値と上限の間、内部行列欠如、低フレームレート、無音声、外部マイク。
+- **測定可能（ready）**: 上記いずれも無い。
+
+`issues` はブロッキング要因を先頭に列挙し、UI がローカライズした助言（例: 方位不良→金属・磁気源から離れる）へ
+写像する。閾値（良好/上限の水平精度・方位精度、最小フレームレート）は `CalibrationAssessor.Thresholds` で
+調整でき、`CalibrationAssessorTests` が全分岐を検証する。
