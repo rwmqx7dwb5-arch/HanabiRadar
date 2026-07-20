@@ -1,6 +1,21 @@
 {
   "sourceLanguage" : "ja",
   "strings" : {
+    "気象データ" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Weather data" } }
+      }
+    },
+    "音速補正のため、観測地点の現在の気象条件を Apple WeatherKit から取得します。取得時刻とデータ提供元は結果にも併記します。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "For sound-speed correction, current conditions at the observation point are fetched from Apple WeatherKit. The fetch time and data source are also shown with the result." } }
+      }
+    },
+    "データソース" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Data sources" } }
+      }
+    },
     "カメラの許可が必要です" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Camera access is required" } }
