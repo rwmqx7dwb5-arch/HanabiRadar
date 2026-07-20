@@ -130,7 +130,7 @@ Python 標準ライブラリのみで同じ数式を独立実装し、合成fixt
 - [ ] カメラ映像表示 / マイク入力取得（Capture 層）
 - [ ] 発光候補・爆発音候補の検出と対応付け（Detection 層）
 - [x] 距離計算・カメラレイ・緯度経度高度計算（`HanabiCore`）
-- [x] 誤差範囲の算出（`UncertaintyEstimator`）
+- [x] 誤差範囲の算出（`UncertaintyEstimator`）＋ライブ精度→入力σ写像（`Inputs.fromMeasurement`・`UncertaintyInputsTests`）
 - [x] 複数発クラスタリング（`LaunchAreaClusterer`）
 - [x] 複数発のセッション集約（コア・`SessionAggregator`：信頼度ゲート＋加重DBSCAN＋代表統計・`SessionAggregatorTests`）
 - [x] 測定準備アセスメント（コア・`CalibrationAssessor`：精度→測定可能/精度低下/測定困難＋限定要因・`CalibrationAssessorTests`）
