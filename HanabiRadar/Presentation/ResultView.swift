@@ -72,10 +72,11 @@ struct ResultView: View {
 /// the preview). The sample runs the real core, so this proves the estimate → honest
 /// presentation path builds and renders.
 struct DemoResultScreen: View {
+    @AppStorage("unit.distanceMetric") private var metric = true
     private let sample = DemoEstimate.sample()
 
     var body: some View {
-        ResultView(estimate: sample.estimate, uncertainty: sample.uncertainty)
+        ResultView(estimate: sample.estimate, uncertainty: sample.uncertainty, metric: metric)
     }
 }
 

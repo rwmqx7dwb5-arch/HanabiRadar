@@ -78,4 +78,11 @@ enum Formatting {
         case .pairing: return "対応付け"
         }
     }
+
+    /// Temperature formatted in the user's preferred unit (°C default, °F optional).
+    static func temperature(celsius: Double, fahrenheit: Bool) -> String {
+        fahrenheit
+            ? String(format: "%.0f°F", celsius * 9 / 5 + 32)
+            : String(format: "%.0f°C", celsius)
+    }
 }

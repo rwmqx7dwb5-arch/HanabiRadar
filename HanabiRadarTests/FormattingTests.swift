@@ -71,4 +71,11 @@ final class FormattingTests: XCTestCase {
         XCTAssertEqual(Formatting.dominantFactorLabel(.timeDifference), "時間差")
         XCTAssertEqual(Formatting.dominantFactorLabel(.gpsVertical), "GPS垂直精度")
     }
+
+    func testTemperatureUnits() {
+        XCTAssertEqual(Formatting.temperature(celsius: 22, fahrenheit: false), "22°C")
+        XCTAssertEqual(Formatting.temperature(celsius: 20, fahrenheit: true), "68°F")
+        XCTAssertEqual(Formatting.temperature(celsius: 0, fahrenheit: true), "32°F")
+        XCTAssertEqual(Formatting.temperature(celsius: 100, fahrenheit: true), "212°F")
+    }
 }

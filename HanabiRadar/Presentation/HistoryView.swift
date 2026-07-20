@@ -74,8 +74,10 @@ struct DemoHistoryScreen: View {
         ]
     }()
 
+    @AppStorage("unit.distanceMetric") private var metric = true
+
     var body: some View {
-        HistoryView(sessions: demo)
+        HistoryView(sessions: demo, metric: metric)
     }
 }
 
