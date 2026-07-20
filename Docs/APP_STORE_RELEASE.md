@@ -4,6 +4,10 @@
 （所有者側）の作業**である。ここでは所有者が使える下書きとチェックリストを提供する。名称・文言は公開前に
 商標・既存アプリとの衝突を確認して確定すること。
 
+> 掲載素材（名称・説明文 JA+EN・キーワード・審査ノート・App Privacy 回答・スクショ構成）の
+> 詳細下書きは [APP_STORE_LISTING.md](APP_STORE_LISTING.md) に集約。掲載用の静的ページは
+> [`Docs/support/index.html`](support/index.html) / [`privacy.html`](support/privacy.html)。
+
 ## 名称・ストア文言（下書き）
 
 - **App 名候補**: 「Hanabi Radar（花火レーダー）」ほか。※要商標/既存アプリ確認。
@@ -22,9 +26,8 @@
 
 - **WeatherKit 帰属表示**: Apple Weather の所定の帰属（`WeatherService.shared.attribution` の名称＋法的ページ
   リンク）を、気象データを表示する画面に必ず出す。**未実装**（アダプタはあるが帰属 UI は要追加）。
-- **Support URL**: サポート用の静的ページ（要作成・ホスティング）。
-- **Privacy Policy URL**: プライバシーポリシーの静的ページ（[PRIVACY.md](PRIVACY.md) を基に作成・ホスティング）。
-  アプリ内からも確認可能にする。
+- **Support URL**: [`Docs/support/index.html`](support/index.html) を**作成済み**（JA+EN・自己完結）。所有者はこれをホスティングして URL 化する。
+- **Privacy Policy URL**: [`Docs/support/privacy.html`](support/privacy.html) を**作成済み**（[PRIVACY.md](PRIVACY.md) 準拠・JA+EN）。ホスティングして URL 化し、アプリ内からもリンク可能にする（アプリ内リンクは後続）。連絡先メールは所有者が差し替える。
 
 ## 審査向け Review Notes（下書き）
 
@@ -42,7 +45,7 @@
 
 ## その他アセット
 
-- **App Icon**: 夜空＋花火のアクセント（要作成、全サイズ）。
+- **App Icon**: 夜空＋花火の閃光を**作成済み**（[`Assets.xcassets/AppIcon.appiconset`](../HanabiRadar/Resources/Assets.xcassets/AppIcon.appiconset)・1024 不透過 RGB、単一サイズを Xcode がダウンサンプル）。Accent Color（Light/Dark）も同梱。
 - **スクリーンショット構成案**: ①測定画面（ガイド/水平器/方位）②結果（距離・信頼度）③地図（観測/爆発/直下/95%範囲）
   ④推定打ち上げ区域 ⑤履歴。
 - **Light/Dark 表示確認**: 暗色 UI 基調・低輝度モード。両表示で確認。
@@ -62,9 +65,9 @@
 - [ ] StoreKit 商品を App Store Connect に登録・サンドボックス購入/復元確認
 - [ ] 本番広告 ID を安全に分離（xcconfig）・テスト広告で確認・ATT/UMP 同意
 - [ ] WeatherKit 帰属表示 UI を実装・表示確認
-- [ ] Support / Privacy Policy ページ作成・アプリ内リンク
-- [ ] Privacy Manifest・App Privacy 回答を実挙動と一致させる
-- [ ] スクリーンショット・App Icon 用意
+- [x] Support / Privacy Policy ページ**作成**（[Docs/support/](support/)）→ [ ] ホスティングして URL 化・アプリ内リンク・連絡先差し替え
+- [x] Privacy Manifest に Required-Reason API 宣言（UserDefaults `CA92.1`＋SystemBootTime `35F9.1`）→ [ ] SDK 追加時に App Privacy 回答を実挙動と一致させ更新
+- [x] **App Icon** 用意（1024 不透過・Accent 同梱）→ [ ] スクリーンショット撮影（Light/Dark）
 - [ ] 権限拒否時の非クラッシュ・30 分連続試験（実機）
 - [ ] Release 構成ビルド・警告最小化
 - [ ] CI の Actions を commit SHA 固定へ

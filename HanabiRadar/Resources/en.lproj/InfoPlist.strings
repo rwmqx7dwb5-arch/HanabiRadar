@@ -1,0 +1,7 @@
+/* English localization of the Info.plist permission purpose strings (§26).
+   The Japanese source strings live in HanabiRadar/App/Info.plist. */
+
+"NSCameraUsageDescription" = "Used to measure a firework's burst position and direction from the camera image.";
+"NSMicrophoneUsageDescription" = "Used to measure the delay between a firework's flash and the arrival of its bang.";
+"NSLocationWhenInUseUsageDescription" = "Used to compute the firework's position relative to your observation point.";
+"NSMotionUsageDescription" = "Used to measure the iPhone's orientation and angle.";

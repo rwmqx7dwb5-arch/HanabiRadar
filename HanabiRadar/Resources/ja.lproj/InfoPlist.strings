@@ -1,0 +1,6 @@
+/* 日本語（開発言語）の Info.plist 権限説明文。Info.plist の値と一致させること。 */
+
+"NSCameraUsageDescription" = "花火の発光位置と方向を測定するためにカメラを使用します。";
+"NSMicrophoneUsageDescription" = "花火の発光から爆発音が届くまでの時間を測定するためにマイクを使用します。";
+"NSLocationWhenInUseUsageDescription" = "観測地点を基準に花火の位置を計算するために現在地を使用します。";
+"NSMotionUsageDescription" = "iPhoneの向きと角度を測定するためにモーションセンサーを使用します。";
