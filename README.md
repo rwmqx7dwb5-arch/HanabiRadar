@@ -152,6 +152,7 @@ Python 標準ライブラリのみで同じ数式を独立実装し、合成fixt
 - [x] 収益化アーキテクチャ（`PurchaseService`＋StoreKit2実装／`AdPolicy` 配置規則＋`AdService` 分離・`MonetizationTests`：購入→プレミアム／測定中は広告なし／頻度上限／プレミアムは広告停止）
 - [ ] 購入画面UI・本番広告ID/SDK結線・ATT/UMP同意（所有者側）
 - [ ] 権限拒否時の非クラッシュ動作・30分連続試験
+- [x] 必須ドキュメント一式（[ARCHITECTURE](Docs/ARCHITECTURE.md) / [SCIENCE_AND_MATH](Docs/SCIENCE_AND_MATH.md) / [PRIVACY](Docs/PRIVACY.md) / [MONETIZATION](Docs/MONETIZATION.md) / [TESTING](Docs/TESTING.md) / [APP_STORE_RELEASE](Docs/APP_STORE_RELEASE.md) / [THIRD_PARTY_NOTICES](Docs/THIRD_PARTY_NOTICES.md) / [KNOWN_LIMITATIONS](Docs/KNOWN_LIMITATIONS.md)）
 - [外部] 署名・WeatherKit entitlement・本番広告ID・App Store Connect 設定・TestFlight 提出
 
 詳細な既知の制限は [`Docs/KNOWN_LIMITATIONS.md`](Docs/KNOWN_LIMITATIONS.md) を参照。
