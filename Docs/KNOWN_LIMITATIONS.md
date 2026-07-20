@@ -79,7 +79,10 @@
   モーション不可を区別し、権限系は「設定を開く」導線を出す。マッピングは `PermissionGuidanceTests`/`PermissionMappingTests` で
   検証し、degraded-mode の UI スモークで拒否時もクラッシュせず画面が出ることを確認する。**ただし対話的な代替入力
   （手動の観測地点指定・方向のみ測定 UI）は未実装**で、実機での実拒否時の挙動と 30 分連続試験は所有者側の実機検証が必要。
-- **実広告 SDK/ATT/UMP** は引き続き未実装。WeatherKit 帰属表示 UI は実装済み（上記・実 attribution 取得は entitlement 要）。
+- **実広告 SDK と実 UMP/ATT SDK の結線** は未実装。**同意アーキテクチャ（`ConsentService`/`ConsentGate`/`AdCoordinator`）は
+  実装・`ConsentTests` 済み**＝フェイルクローズ（同意解決まで広告なし・SDK 非初期化）／プレミアムは SDK 非初期化／
+  パーソナライズは同意追従。所有者は Google UMP＋`ATTrackingManager` を `ConsentService` の実装として差し込むのみ。
+  WeatherKit 帰属表示 UI は実装済み（上記・実 attribution 取得は entitlement 要）。
 
 ## この開発環境に由来する制限
 
