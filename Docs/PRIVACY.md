@@ -23,7 +23,8 @@ App Store の App Privacy 回答の下書きをここに記します。実装状
 
 ## 権限と Purpose String
 
-`HanabiRadar/App/Info.plist` に設定（日本語。英語ローカライズは §26 で追加予定）:
+`HanabiRadar/App/Info.plist` に設定（日本語＝開発言語）。英語は
+`HanabiRadar/Resources/en.lproj/InfoPlist.strings` で**ローカライズ済み**（`ja.lproj` も明示）:
 
 | キー | 用途 |
 |---|---|
@@ -41,8 +42,15 @@ App Store の App Privacy 回答の下書きをここに記します。実装状
 
 ## Privacy Manifest
 
-`HanabiRadar/App/PrivacyInfo.xcprivacy` を同梱。収集データ種別・用途・トラッキング有無を宣言します。
-第三者 SDK を追加する際は、その SDK のマニフェスト・収集内容を確認し本ファイルへ反映します。
+`HanabiRadar/App/PrivacyInfo.xcprivacy` を同梱。トラッキング無し・収集データ種別なしを宣言し、
+実際に使用する **Required-Reason API** を宣言します:
+
+| カテゴリ | 理由コード | 該当箇所 |
+|---|---|---|
+| `NSPrivacyAccessedAPICategoryUserDefaults` | `CA92.1` | 単位設定（`@AppStorage`）を自アプリの UserDefaults に保存 |
+| `NSPrivacyAccessedAPICategorySystemBootTime` | `35F9.1` | `ProcessInfo.systemUptime` による測定の共通時刻軸（端末内・アプリ内イベント間の経過時間） |
+
+第三者 SDK を追加する際は、その SDK のマニフェスト・収集内容を確認し本ファイルと App Privacy 回答へ反映します。
 
 ## App Privacy 回答（下書き・提出時に確定）
 

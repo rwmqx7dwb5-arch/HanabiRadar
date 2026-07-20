@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hanabi Radar — サポート / Support</title>
+<meta name="description" content="Hanabi Radar support page — how the app works, permissions, and FAQ.">
+<style>
+  :root { color-scheme: dark light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font: 16px/1.7 -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Segoe UI", Roboto, sans-serif;
+    color: #e9ecf5; background: radial-gradient(120% 90% at 50% 0%, #142048 0%, #0a0e1e 45%, #05060e 100%);
+    min-height: 100vh;
+  }
+  a { color: #ffce6b; }
+  header { text-align: center; padding: 56px 20px 24px; }
+  .badge {
+    width: 84px; height: 84px; border-radius: 20px; margin: 0 auto 16px;
+    background: radial-gradient(circle at 50% 46%, #fffbe8 0%, #ffd24a 12%, #ff6fa3 30%, transparent 60%), #0a0e1e;
+    box-shadow: 0 8px 30px rgba(255,180,90,.25);
+  }
+  h1 { font-size: 28px; margin: 0 0 6px; }
+  .sub { color: #aab3c9; margin: 0; }
+  main { max-width: 760px; margin: 0 auto; padding: 8px 20px 72px; }
+  section { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+            border-radius: 14px; padding: 20px 22px; margin: 18px 0; }
+  h2 { font-size: 20px; margin: 0 0 10px; }
+  ul { padding-left: 1.2em; } li { margin: 4px 0; }
+  .toggle { display: flex; gap: 8px; justify-content: center; margin: 8px 0 4px; }
+  .toggle button {
+    background: rgba(255,255,255,.06); color: #e9ecf5; border: 1px solid rgba(255,255,255,.18);
+    border-radius: 999px; padding: 6px 16px; font: inherit; cursor: pointer;
+  }
+  .toggle button[aria-pressed="true"] { background: #ffd24a; color: #1a1400; border-color: #ffd24a; }
+  footer { text-align: center; color: #8b93a9; font-size: 13px; padding: 0 20px 48px; }
+  /* Language gating: hide all, then revert matched elements to their natural
+     display (block / list-item / inline). !important neutralizes any inline
+     display so shared sections show one language at a time. */
+  [data-lang] { display: none !important; }
+  body.ja [data-lang="ja"], body.en [data-lang="en"] { display: revert !important; }
+</style>
+</head>
+<body class="ja">
+<header>
+  <div class="badge" aria-hidden="true"></div>
+  <h1>Hanabi Radar</h1>
+  <p class="sub" data-lang="ja">サポート</p>
+  <p class="sub" data-lang="en">Support</p>
+  <div class="toggle" role="group" aria-label="Language">
+    <button type="button" data-set="ja" aria-pressed="true">日本語</button>
+    <button type="button" data-set="en" aria-pressed="false">English</button>
+  </div>
+</header>
+<main>
+  <section data-lang="ja">
+    <h2>Hanabi Radar とは</h2>
+    <p>花火大会を科学的に楽しむための観測アプリです。iPhone を花火へ向けて待つだけで、発光と爆発音の
+    時間差・端末の姿勢と方位・現在地・気象を統合し、花火の爆発地点を 3 次元で<strong>推定</strong>します。
+    すべての値は誤差と信頼度つきで表示され、確定情報のようには見せません。測量・警備などの専門用途では
+    ありません。</p>
+  </section>
+  <section data-lang="en">
+    <h2>About Hanabi Radar</h2>
+    <p>Hanabi Radar helps you enjoy a fireworks show with a scientific eye. Point your iPhone at the
+    fireworks and wait: the app combines the flash-to-bang delay, device attitude and heading, your
+    location, and weather to <strong>estimate</strong> where a burst happened in 3D. Every value is
+    shown with its uncertainty and confidence — never as a confirmed fact. It is not a surveying or
+    security tool.</p>
+  </section>
+
+  <section data-lang="ja">
+    <h2>使い方</h2>
+    <ul>
+      <li>暗く開けた場所で、iPhone を花火の方向へ向けます。</li>
+      <li>画面の中央ガイド・水平器・方位表示を目安に構えて待ちます。</li>
+      <li>発光を検出すると、数秒後の爆発音を自動で待ち受けます。</li>
+      <li>時間差から距離を計算し、結果を数値と地図で表示します。</li>
+      <li>複数発を測るほど、推定打ち上げ区域の精度が上がります。</li>
+    </ul>
+  </section>
+  <section data-lang="en">
+    <h2>How to use</h2>
+    <ul>
+      <li>In a dark, open spot, point your iPhone toward the fireworks.</li>
+      <li>Use the on-screen center guide, level, and compass to aim, then wait.</li>
+      <li>When a flash is detected, the app automatically listens for the bang.</li>
+      <li>It computes distance from the delay and shows the result as numbers and a map.</li>
+      <li>The more bursts you measure, the better the estimated launch area becomes.</li>
+    </ul>
+  </section>
+
+  <section data-lang="ja">
+    <h2>権限について</h2>
+    <ul>
+      <li><strong>カメラ・マイク</strong>: 発光の検出と、爆発音までの時間差測定に使用します。生の映像・音声は保存・送信しません。</li>
+      <li><strong>現在地</strong>: 観測地点として、また音速補正の気象取得の座標として使用します。広告目的では使用しません。</li>
+      <li><strong>モーション</strong>: 端末の向き・角度を測り、画面内の位置を実際の方向へ変換します。</li>
+    </ul>
+    <p>権限を許可しない場合でもアプリは起動し、可能な範囲の限定モードで動作します。</p>
+  </section>
+  <section data-lang="en">
+    <h2>Permissions</h2>
+    <ul>
+      <li><strong>Camera &amp; Microphone</strong>: detect the flash and time the bang. Raw media is not stored or sent.</li>
+      <li><strong>Location</strong>: the observation point, and the coordinate used to fetch weather for sound-speed correction. Not used for ads.</li>
+      <li><strong>Motion</strong>: device orientation, to turn an on-screen position into a real-world direction.</li>
+    </ul>
+    <p>If you decline a permission, the app still launches and runs in a reduced mode where possible.</p>
+  </section>
+
+  <section data-lang="ja">
+    <h2>よくある質問</h2>
+    <p><strong>発射筒の正確な場所はわかりますか？</strong><br>いいえ。1 台の iPhone では発射筒の正確な位置は原則として確定できません。複数発から推定した「打ち上げ区域」として提示します。</p>
+    <p><strong>結果が実際とずれます。</strong><br>方位センサーの誤差、反響音、斜め打ち、気象の代表性などの要因があります。信頼度と誤差範囲を必ずご確認ください。金属・スピーカー・磁気源から離れると方位精度が改善することがあります。</p>
+    <p><strong>プレミアムで精度は上がりますか？</strong><br>いいえ。推定エンジンは無料版と同一です。プレミアムは広告非表示・履歴無制限・エクスポート・詳細誤差の追加です。</p>
+  </section>
+  <section data-lang="en">
+    <h2>FAQ</h2>
+    <p><strong>Can it find the exact mortar location?</strong><br>No. A single iPhone cannot determine the exact launch tube position. The app presents an estimated launch <em>area</em> from multiple bursts.</p>
+    <p><strong>The result seems off.</strong><br>Heading-sensor error, echoes, angled shells, and weather representativeness all matter. Always check the confidence and uncertainty range. Moving away from metal, speakers, and magnets can improve heading accuracy.</p>
+    <p><strong>Does Premium improve accuracy?</strong><br>No. The estimation engine is identical to the free version. Premium adds ad-free use, unlimited history, export, and detailed uncertainty.</p>
+  </section>
+
+  <section>
+    <h2 data-lang="ja" style="display:block">お問い合わせ</h2>
+    <h2 data-lang="en" style="display:block">Contact</h2>
+    <!-- TODO(owner): replace with a real support address before submission. -->
+    <p>Email: <a href="mailto:support@example.com">support@example.com</a></p>
+    <p><a href="privacy.html" data-lang="ja" style="display:inline">プライバシーポリシー</a>
+       <a href="privacy.html" data-lang="en" style="display:inline">Privacy Policy</a></p>
+  </section>
+</main>
+<footer>
+  <span data-lang="ja" style="display:inline">最終更新: 2026-07-20 ・ Hanabi Radar</span>
+  <span data-lang="en" style="display:inline">Last updated: 2026-07-20 · Hanabi Radar</span>
+</footer>
+<script>
+  const body = document.body;
+  document.querySelectorAll('.toggle button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      const lang = b.getAttribute('data-set');
+      body.className = lang;
+      document.documentElement.lang = lang;
+      document.querySelectorAll('.toggle button').forEach(function (x) {
+        x.setAttribute('aria-pressed', String(x === b));
+      });
+    });
+  });
+</script>
+</body>
+</html>

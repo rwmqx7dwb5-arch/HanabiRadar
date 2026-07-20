@@ -50,6 +50,19 @@
 - 取得失敗時はコア（`BurstSolver.solve`）が観測点条件のみで計算を継続し、結果に「気象補正: 一部未適用」を表示する
   設計（§5）。失敗時フォールバックの UI 表示は app 側で未実装。
 
+## 製品化（掲載素材・アイコン・ローカライズ）の現状
+
+- **App Icon / Accent**: `Assets.xcassets` に 1024 不透過アイコンと Light/Dark Accent を同梱し `project.yml` に結線した。
+  ただし **actool による実ビルド（iOS CI）と実機/シミュレータでの見え方は所有者側の確認が必要**。単一サイズ 1024 を
+  Xcode がダウンサンプルする構成のため、小サイズでの視認性は縮小プレビューで確認すること。
+- **ローカライズ**: 権限説明文（InfoPlist.strings）は EN/JA を用意したが、**アプリ内 UI 文字列のカタログ化
+  （`Localizable.xcstrings`）とアクセシビリティ仕上げ（VoiceOver ラベル・Dynamic Type 検証）は未実施**。
+- **掲載素材**: [APP_STORE_LISTING](APP_STORE_LISTING.md) と静的 Support/Privacy ページは下書きであり、連絡先メール・
+  ホスティング URL・スクリーンショット・年齢レーティングの最終回答は所有者が確定する。
+- **StoreKit 構成ファイル**: `HanabiRadar.storekit` はローカル検証用で、スキームには未結線（Xcode 側で有効化）。
+  実価格は App Store Connect で設定する。
+- **WeatherKit 帰属表示 UI**・**購入画面 UI**・**権限拒否時の限定モード UI** は引き続き未実装。
+
 ## この開発環境に由来する制限
 
 - 本リポジトリを作成した環境は **Windows** であり、**Swift ツールチェーンが無いため `swift build` /

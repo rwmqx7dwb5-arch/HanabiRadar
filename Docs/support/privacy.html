@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hanabi Radar — プライバシーポリシー / Privacy Policy</title>
+<meta name="description" content="Hanabi Radar privacy policy — on-device processing, no raw media upload.">
+<style>
+  :root { color-scheme: dark light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font: 16px/1.7 -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Segoe UI", Roboto, sans-serif;
+    color: #e9ecf5; background: radial-gradient(120% 90% at 50% 0%, #142048 0%, #0a0e1e 45%, #05060e 100%);
+    min-height: 100vh;
+  }
+  a { color: #ffce6b; }
+  header { text-align: center; padding: 48px 20px 8px; }
+  h1 { font-size: 26px; margin: 0 0 6px; }
+  .sub { color: #aab3c9; margin: 0; }
+  main { max-width: 760px; margin: 0 auto; padding: 8px 20px 72px; }
+  section { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+            border-radius: 14px; padding: 20px 22px; margin: 18px 0; }
+  h2 { font-size: 20px; margin: 0 0 10px; }
+  ul { padding-left: 1.2em; } li { margin: 4px 0; }
+  .toggle { display: flex; gap: 8px; justify-content: center; margin: 14px 0 4px; }
+  .toggle button {
+    background: rgba(255,255,255,.06); color: #e9ecf5; border: 1px solid rgba(255,255,255,.18);
+    border-radius: 999px; padding: 6px 16px; font: inherit; cursor: pointer;
+  }
+  .toggle button[aria-pressed="true"] { background: #ffd24a; color: #1a1400; border-color: #ffd24a; }
+  footer { text-align: center; color: #8b93a9; font-size: 13px; padding: 0 20px 48px; }
+  /* Language gating: hide all, then revert matched elements to their natural
+     display (block / list-item / inline). !important neutralizes any inline
+     display so shared sections show one language at a time. */
+  [data-lang] { display: none !important; }
+  body.ja [data-lang="ja"], body.en [data-lang="en"] { display: revert !important; }
+</style>
+</head>
+<body class="ja">
+<header>
+  <h1>Hanabi Radar</h1>
+  <p class="sub" data-lang="ja" style="display:block">プライバシーポリシー</p>
+  <p class="sub" data-lang="en" style="display:block">Privacy Policy</p>
+  <div class="toggle" role="group" aria-label="Language">
+    <button type="button" data-set="ja" aria-pressed="true">日本語</button>
+    <button type="button" data-set="en" aria-pressed="false">English</button>
+  </div>
+</header>
+<main>
+  <section data-lang="ja">
+    <h2>基本方針</h2>
+    <p>Hanabi Radar はカメラ・マイク・現在地・モーションという機微な情報を扱いますが、
+    <strong>推定計算はすべて端末内で完結</strong>します。生の映像・音声・正確な位置を、開発者の
+    サーバーや第三者へ送信しません。独自の解析サーバーやアカウントはありません。</p>
+  </section>
+  <section data-lang="en">
+    <h2>Our approach</h2>
+    <p>Hanabi Radar uses sensitive inputs — camera, microphone, location, and motion — but
+    <strong>all estimation runs on your device</strong>. Raw video, raw audio, and precise location
+    are never sent to the developer's servers or to third parties. There is no analytics server and
+    no account.</p>
+  </section>
+
+  <section data-lang="ja">
+    <h2>端末内で使用する情報</h2>
+    <ul>
+      <li><strong>カメラ映像・マイク音声</strong>: 発光の検出と爆発音までの時間差の測定にのみ使用。リングバッファ上の特徴量で処理し、生メディアは常時保存しません（診断保存はユーザーの明示操作時のみ）。</li>
+      <li><strong>現在地</strong>: 観測地点として位置計算に使用。<em>When In Use</em> のみで、常時取得はしません。</li>
+      <li><strong>モーション</strong>: 端末の向き・角度の測定に使用。</li>
+    </ul>
+  </section>
+  <section data-lang="en">
+    <h2>Information used on device</h2>
+    <ul>
+      <li><strong>Camera &amp; microphone</strong>: used only to detect the flash and time the bang. Processed as features in a short ring buffer; raw media is not persisted (diagnostic saving happens only on your explicit action).</li>
+      <li><strong>Location</strong>: used as the observation point for the geometry. <em>When In Use</em> only; never in the background.</li>
+      <li><strong>Motion</strong>: used to measure the device's orientation and angle.</li>
+    </ul>
+  </section>
+
+  <section data-lang="ja">
+    <h2>外部へ出るデータ</h2>
+    <ul>
+      <li><strong>Apple WeatherKit</strong>: 音速補正のため、観測点・推定爆発地点の<em>座標</em>を Apple の気象サービスへ問い合わせます（現在条件の取得）。Apple のプライバシーポリシー下で処理され、第三者広告網とは無関係です。座標を URL クエリに載せる等の不用意な送信は行いません。取得失敗時は観測点条件のみで計算を続けます。</li>
+      <li><strong>広告（導入する場合）</strong>: 広告 SDK は同意（ATT/UMP）の下でのみ動作し、初期設定は非パーソナライズ広告を優先します。位置情報を広告事業者へ渡す経路は設けません。プレミアム購入後は広告 SDK を初期化しません。</li>
+    </ul>
+  </section>
+  <section data-lang="en">
+    <h2>Data that leaves the device</h2>
+    <ul>
+      <li><strong>Apple WeatherKit</strong>: for sound-speed correction, the <em>coordinates</em> of the observer and estimated burst are queried against Apple's weather service (current conditions). This is handled under Apple's privacy policy and is unrelated to any ad network. Coordinates are never placed in URL query strings or sent carelessly. If the request fails, calculation continues with observer conditions only.</li>
+      <li><strong>Ads (if enabled)</strong>: any ad SDK runs only under consent (ATT/UMP) and defaults to non-personalized ads. There is no path that hands your location to advertisers. After a Premium purchase, the ad SDK is not initialized.</li>
+    </ul>
+  </section>
+
+  <section data-lang="ja">
+    <h2>保存と削除</h2>
+    <p>測定履歴は端末内にのみ保存されます。設定画面の「すべての履歴を削除」からいつでも削除できます。
+    診断メディアを保存した場合も、ユーザーが削除できます。</p>
+  </section>
+  <section data-lang="en">
+    <h2>Storage &amp; deletion</h2>
+    <p>Measurement history is stored only on your device. You can delete it at any time from
+    Settings → "Delete all history". If you saved diagnostic media, you can delete that too.</p>
+  </section>
+
+  <section data-lang="ja">
+    <h2>子どもと年齢</h2>
+    <p>本アプリは追跡を行わず、広告目的で個人情報を収集しません。年齢レーティングは提出時の質問に正確に回答して確定します。</p>
+  </section>
+  <section data-lang="en">
+    <h2>Children &amp; age</h2>
+    <p>The app does not track users and does not collect personal information for advertising. The
+    age rating is finalized by answering Apple's questionnaire accurately at submission.</p>
+  </section>
+
+  <section>
+    <h2 data-lang="ja" style="display:block">お問い合わせ・改定</h2>
+    <h2 data-lang="en" style="display:block">Contact &amp; changes</h2>
+    <!-- TODO(owner): replace with a real contact address and keep the effective date current. -->
+    <p data-lang="ja" style="display:block">お問い合わせ: <a href="mailto:support@example.com">support@example.com</a>。本ポリシーを改定した場合は本ページを更新し、実際のアプリ挙動と一致させます。</p>
+    <p data-lang="en" style="display:block">Contact: <a href="mailto:support@example.com">support@example.com</a>. If this policy changes, this page is updated to match the app's actual behavior.</p>
+    <p><a href="index.html" data-lang="ja" style="display:inline">サポートへ戻る</a><a href="index.html" data-lang="en" style="display:inline">Back to Support</a></p>
+  </section>
+</main>
+<footer>
+  <span data-lang="ja" style="display:block">発効日: 2026-07-20 ・ Hanabi Radar</span>
+  <span data-lang="en" style="display:block">Effective date: 2026-07-20 · Hanabi Radar</span>
+</footer>
+<script>
+  const body = document.body;
+  document.querySelectorAll('.toggle button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      const lang = b.getAttribute('data-set');
+      body.className = lang;
+      document.documentElement.lang = lang;
+      document.querySelectorAll('.toggle button').forEach(function (x) {
+        x.setAttribute('aria-pressed', String(x === b));
+      });
+    });
+  });
+</script>
+</body>
+</html>

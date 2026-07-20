@@ -1,0 +1,55 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "b9bbbd71-91f7-41bf-a69e-e2961c3680f4",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "160",
+      "familyShareable" : false,
+      "internalID" : "1263ee59-d51d-451a-8b97-43e543ef17d8",
+      "localizations" : [
+        {
+          "description" : "Remove ads, unlimited history, CSV/JSON/GeoJSON export, and detailed uncertainty. The estimation engine is identical to the free version.",
+          "displayName" : "Hanabi Radar Premium",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "広告非表示・履歴無制限・CSV/JSON/GeoJSONエクスポート・詳細な誤差情報。推定エンジンは無料版と同一です。",
+          "displayName" : "Hanabi Radar プレミアム",
+          "locale" : "ja_JP"
+        }
+      ],
+      "productID" : "com.example.hanabiradar.premium.lifetime",
+      "referenceName" : "Premium (Lifetime)",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "",
+    "_developerTeamID" : "",
+    "_failTransactionsEnabled" : false,
+    "_locale" : "ja_JP",
+    "_storefront" : "JPN",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
