@@ -24,6 +24,18 @@ jobs:
         working-directory: HanabiCore
         run: swift test --parallel
 
+  capture-tests:
+    name: Build & test capture core
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        working-directory: HanabiCapture
+        run: swift build
+      - name: Test
+        working-directory: HanabiCapture
+        run: swift test --parallel
+
   lint:
     name: SwiftLint (advisory)
     runs-on: macos-14
