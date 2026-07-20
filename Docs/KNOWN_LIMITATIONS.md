@@ -39,6 +39,17 @@
   AVAudioEngine 別経路であり、A/V 同期精度は実機で検証する。
 - カメラのフレーム画素処理・内部行列のパイプライン供給は Phase 2 で結線する（現状はセッション確立と PTS 追跡のみ）。
 
+### WeatherKit 実アダプタ（`WeatherKitProvider`・ビルド検証のみ・実行未検証）
+
+- `WeatherKitProvider` は Apple 公式ドキュメントで API 面（`WeatherService.shared.weather(for:).currentWeather` の
+  `temperature/humidity/pressure/wind`）を確認して実装し、**署名なしビルド（iOS CI）でコンパイル検証される**。
+  ただし **実行には WeatherKit capability + entitlement と Apple Developer アカウント（所有者側）が必須**であり、
+  実機・ネットワーク経由の取得結果は未検証。
+- Apple の要件により、WeatherKit データを表示する箇所には **`WeatherService.shared.attribution`（提供元表示）が必須**。
+  この帰属表示 UI はまだ未実装。
+- 取得失敗時はコア（`BurstSolver.solve`）が観測点条件のみで計算を継続し、結果に「気象補正: 一部未適用」を表示する
+  設計（§5）。失敗時フォールバックの UI 表示は app 側で未実装。
+
 ## この開発環境に由来する制限
 
 - 本リポジトリを作成した環境は **Windows** であり、**Swift ツールチェーンが無いため `swift build` /
