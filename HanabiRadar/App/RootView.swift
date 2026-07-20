@@ -46,6 +46,12 @@ struct RootView: View {
                 .buttonStyle(.bordered)
                 .accessibilityIdentifier("go-history")
 
+                NavigationLink("地図（デモ）へ") {
+                    DemoMapScreen()
+                }
+                .buttonStyle(.bordered)
+                .accessibilityIdentifier("go-map")
+
                 NavigationLink("設定へ") {
                     SettingsView()
                 }

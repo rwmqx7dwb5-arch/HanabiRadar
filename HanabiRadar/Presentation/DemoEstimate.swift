@@ -29,7 +29,7 @@ enum DemoEstimate {
     /// A fuller demo: a deterministic estimate plus its Monte Carlo uncertainty, so the
     /// result screen can render honest error bars and confidence. Not a real measurement;
     /// it exercises the real core (`BurstSolver` + `UncertaintyEstimator`).
-    static func sample() -> (estimate: BurstEstimate, uncertainty: UncertaintyResult) {
+    static func sample() -> (observer: GeodeticCoordinate, estimate: BurstEstimate, uncertainty: UncertaintyResult) {
         let observer = GeodeticCoordinate(latitude: 35.681, longitude: 139.767, altitude: 30)
         let azimuth = 45.0 * .pi / 180
         let elevation = 40.0 * .pi / 180
@@ -49,6 +49,6 @@ enum DemoEstimate {
                 frameRate: 60, pairingConfidence: 0.85, sampleCount: 400
             )
         )
-        return (estimate, uncertainty)
+        return (observer, estimate, uncertainty)
     }
 }
