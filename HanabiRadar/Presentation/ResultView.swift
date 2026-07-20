@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 import HanabiCore
 
@@ -36,13 +37,13 @@ struct ResultView: View {
             }
 
             Section("信頼度") {
-                row("総合", "\(Formatting.confidenceLabel(report.confidenceCategory))（\(Int((report.confidence * 100).rounded()))%）")
-                row("主な誤差要因", Formatting.dominantFactorLabel(report.dominantFactor))
+                row("総合", "\(localized(Formatting.confidenceLabel(report.confidenceCategory)))（\(Int((report.confidence * 100).rounded()))%）")
+                row("主な誤差要因", localized(Formatting.dominantFactorLabel(report.dominantFactor)))
             }
 
             Section("爆発地点の直下（推定）") {
                 row("緯度経度", Formatting.coordinate(estimate.subpoint, precision: report.horizontalPrecision))
-                row("95%範囲", "半径約 \(Formatting.distance(meters: report.horizontalRadius95Meters, metric: metric))")
+                row("95%範囲", String(localized: "半径約 \(Formatting.distance(meters: report.horizontalRadius95Meters, metric: metric))"))
                 if report.horizontalPrecision == .areaOnly {
                     Text("信頼度が低い / 範囲が広いため、鋭い点ではなく区域として表示しています。")
                         .font(.footnote).foregroundStyle(.secondary)
@@ -58,13 +59,20 @@ struct ResultView: View {
         .accessibilityIdentifier("result-view")
     }
 
-    private func row(_ label: String, _ value: String) -> some View {
+    private func row(_ label: LocalizedStringKey, _ value: String) -> some View {
         HStack(alignment: .firstTextBaseline) {
             Text(label).foregroundStyle(.secondary)
             Spacer(minLength: 12)
             Text(value).multilineTextAlignment(.trailing)
         }
         .accessibilityElement(children: .combine)
+    }
+
+    /// Localizes a source-language label produced by the tested `Formatting` enum by
+    /// looking it up as a key in the string catalog. This keeps `Formatting` (and its
+    /// exact-string unit tests) unchanged while the categorical labels still translate.
+    private func localized(_ sourceKey: String) -> String {
+        NSLocalizedString(sourceKey, comment: "")
     }
 }
 

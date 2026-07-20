@@ -55,8 +55,14 @@
 - **App Icon / Accent**: `Assets.xcassets` に 1024 不透過アイコンと Light/Dark Accent を同梱し `project.yml` に結線した。
   ただし **actool による実ビルド（iOS CI）と実機/シミュレータでの見え方は所有者側の確認が必要**。単一サイズ 1024 を
   Xcode がダウンサンプルする構成のため、小サイズでの視認性は縮小プレビューで確認すること。
-- **ローカライズ**: 権限説明文（InfoPlist.strings）は EN/JA を用意したが、**アプリ内 UI 文字列のカタログ化
-  （`Localizable.xcstrings`）とアクセシビリティ仕上げ（VoiceOver ラベル・Dynamic Type 検証）は未実施**。
+- **ローカライズ**: 権限説明文（InfoPlist.strings）に加え、**アプリ内 UI 文字列を String Catalog
+  （`Localizable.xcstrings`・JA 原文＋EN）へ移行済み**（測定・結果・地図・履歴・設定・ランチャの見出し／ボタン／
+  セクション／注記／状態表示）。ただし次は**意図的に原文（日本語）のまま**：
+  - `Formatting` の値文字列（`海抜約`/`地上高約`/`観測点から`/`標高データなし` などの高さ・距離の書式）。これらは
+    正確な文字列を検証する `FormattingTests` に固定されているため、テストをロケール非依存化する後続で対応する
+    （信頼度ラベル `高/中/低` と主要因ラベルはビュー側で String Catalog を実行時参照して英語化済み）。
+  - `DemoEstimate` のデモ文字列（ランチャの見本表示）。
+  **アクセシビリティ仕上げ（VoiceOver ラベル網羅・Dynamic Type・Reduce Motion 検証）は未実施**。
 - **掲載素材**: [APP_STORE_LISTING](APP_STORE_LISTING.md) と静的 Support/Privacy ページは下書きであり、連絡先メール・
   ホスティング URL・スクリーンショット・年齢レーティングの最終回答は所有者が確定する。
 - **StoreKit 構成ファイル**: `HanabiRadar.storekit` はローカル検証用で、スキームには未結線（Xcode 側で有効化）。
