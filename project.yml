@@ -17,6 +17,8 @@ settings:
 packages:
   HanabiCore:
     path: HanabiCore
+  HanabiCapture:
+    path: HanabiCapture
 
 targets:
   HanabiRadar:
@@ -29,6 +31,8 @@ targets:
     dependencies:
       - package: HanabiCore
         product: HanabiCore
+      - package: HanabiCapture
+        product: HanabiCapture
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.example.hanabiradar
