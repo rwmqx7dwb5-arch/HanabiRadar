@@ -162,6 +162,21 @@ subpoint.altitude = g
 主誤差要因は各要因の位置寄与を m 単位で比較して決定する（例: 距離寄与 `hypot(c·σ_Δt, Δt·σ_c)`、
 方位寄与 `d·σ_heading[rad]`、GPS 水平 `σ_h` など）。方位精度が悪い状態で細かい緯度経度を強調表示しない。
 
+### 誠実な表示ゲーティング（`EstimateReporter`）
+
+「方位精度が悪い状態で細かい緯度経度を強調表示しない」（§14）を UI 任せにせず、コアの決定論ロジックとして
+単体検証する。水平 95% 楕円の長半径 r と信頼度から表示精度を決める:
+
+- 信頼度=低、または r > 300 m → `areaOnly`（鋭い点でなく区域として提示。低信頼時は楕円自体が信頼できないため）
+- 50 m < r ≤ 300 m → `coarse`（点は出すが ± 半径を前面に）
+- r ≤ 50 m → `fine`（フル精度）
+
+`CoordinatePrecision.latLonDecimalPlaces`（fine=5, coarse=3, areaOnly=2 桁）で不確実性が支持する以上の
+有効桁を印字しない。あわせて `weatherFullyApplied`（`iterations≥1`）・`groundHeightAvailable`
+（`heightAboveGround != nil`）・`dominantFactor` を構造化して返し、View はこれをローカライズ表示するだけ
+（文字列生成のみが app 側、判断はコア側で `EstimateReportTests` により検証）。しきい値は
+`EstimateReporter.Thresholds` で調整できる。
+
 ## 8. 打ち上げ区域クラスタリング
 
 単発の直下地点を発射地点とはみなさない。複数発の直下地点を局所 ENU（m）へ射影し、
