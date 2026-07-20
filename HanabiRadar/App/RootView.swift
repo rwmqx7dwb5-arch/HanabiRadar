@@ -11,6 +11,7 @@ struct RootView: View {
         VStack(spacing: 16) {
             Text("Hanabi Radar")
                 .font(.largeTitle.bold())
+                .accessibilityIdentifier("root-title")
             Text("Estimation core v\(CoreInfo.calculationVersion)")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)

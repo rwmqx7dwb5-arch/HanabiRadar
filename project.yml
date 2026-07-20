@@ -55,12 +55,27 @@ targets:
         GENERATE_INFOPLIST_FILE: "YES"
         CODE_SIGNING_ALLOWED: "NO"
 
+  HanabiRadarUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: HanabiRadarUITests
+    dependencies:
+      - target: HanabiRadar
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.hanabiradar.uitests
+        GENERATE_INFOPLIST_FILE: "YES"
+        CODE_SIGNING_ALLOWED: "NO"
+
 schemes:
   HanabiRadar:
     build:
       targets:
         HanabiRadar: all
         HanabiRadarTests: [test]
+        HanabiRadarUITests: [test]
     test:
       targets:
         - HanabiRadarTests
+        - HanabiRadarUITests
