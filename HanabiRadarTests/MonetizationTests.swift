@@ -7,21 +7,25 @@ final class MonetizationTests: XCTestCase {
         let store = MockPurchaseService(premium: false)
         var premium = await store.isPremium()
         XCTAssertFalse(premium)
-        XCTAssertEqual(try await store.purchasePremium(), .purchased)
+        let outcome = try await store.purchasePremium()
+        XCTAssertEqual(outcome, .purchased)
         premium = await store.isPremium()
         XCTAssertTrue(premium)
     }
 
     func testMockCancelledPurchaseStaysNonPremium() async throws {
         let store = MockPurchaseService(premium: false, purchaseOutcome: .cancelled)
-        XCTAssertEqual(try await store.purchasePremium(), .cancelled)
+        let outcome = try await store.purchasePremium()
+        XCTAssertEqual(outcome, .cancelled)
         let premium = await store.isPremium()
         XCTAssertFalse(premium)
     }
 
     func testMockRestoreReflectsPremium() async throws {
-        XCTAssertTrue(try await MockPurchaseService(premium: true).restore())
-        XCTAssertFalse(try await MockPurchaseService(premium: false).restore())
+        let restoredPremium = try await MockPurchaseService(premium: true).restore()
+        XCTAssertTrue(restoredPremium)
+        let restoredFree = try await MockPurchaseService(premium: false).restore()
+        XCTAssertFalse(restoredFree)
     }
 
     func testAdPolicyPremiumNeverSeesAds() {
