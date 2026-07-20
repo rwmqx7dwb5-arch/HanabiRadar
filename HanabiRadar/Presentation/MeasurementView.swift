@@ -1,4 +1,5 @@
 import SwiftUI
+import HanabiCapture
 
 /// Skeleton measurement screen. The capture pipeline is wired via dependency injection
 /// (mock services in UI tests, device services at runtime). Camera + audio come from a
@@ -12,6 +13,10 @@ struct MeasurementView: View {
             Text("測定")
                 .font(.title.bold())
                 .accessibilityIdentifier("measurement-view")
+
+            if let banner = PermissionBanner.forCapability(model.capability) {
+                PermissionBannerView(banner: banner)
+            }
 
             VStack(alignment: .leading, spacing: 6) {
                 Text("AV状態: \(model.captureState)")
@@ -33,6 +38,7 @@ struct MeasurementView: View {
         }
         .padding()
         .navigationTitle("測定")
+        .task { await model.assessPermissions() }
         .onAppear { model.start() }
         .onDisappear { model.stop() }
     }

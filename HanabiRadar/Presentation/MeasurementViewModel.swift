@@ -12,10 +12,23 @@ final class MeasurementViewModel: ObservableObject {
     @Published private(set) var audioSamples = 0
     @Published private(set) var attitudeCount = 0
     @Published private(set) var locationCount = 0
+    /// The best measurement mode the current permissions allow (§21); drives the banner.
+    @Published private(set) var capability: MeasurementCapability = .full
 
     private var controller: UnifiedCaptureController?
     private var coordinator: CaptureCoordinator?
     private let logger: StructuredLogging = AppLogger()
+    private let permissions: PermissionsReading
+
+    init(permissions: PermissionsReading = CaptureFactory.makePermissionsService()) {
+        self.permissions = permissions
+    }
+
+    /// Reads current sensor authorization and updates `capability`. Called on appear so a
+    /// denial degrades the mode and shows guidance instead of leaving a dead screen.
+    func assessPermissions() async {
+        capability = await permissions.current().capability
+    }
 
     func start() {
         let coordinator = CaptureFactory.makeMotionLocationCoordinator(logger: logger)

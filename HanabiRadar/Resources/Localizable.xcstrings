@@ -1,6 +1,51 @@
 {
   "sourceLanguage" : "ja",
   "strings" : {
+    "カメラの許可が必要です" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Camera access is required" } }
+      }
+    },
+    "マイクなしモード" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No-microphone mode" } }
+      }
+    },
+    "現在地なしモード" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No-location mode" } }
+      }
+    },
+    "モーションを利用できません" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Motion unavailable" } }
+      }
+    },
+    "花火を測定するにはカメラを許可してください。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "To measure fireworks, please allow camera access." } }
+      }
+    },
+    "マイクがないため距離は測れません。方向のみ記録します。設定でマイクを許可すると距離も測れます。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Without a microphone, distance can't be measured — only direction is recorded. Enable the microphone in Settings to measure distance too." } }
+      }
+    },
+    "現在地がないため緯度・経度は算出できません。距離と方向は測れます。設定で位置情報を許可してください。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Without location, latitude/longitude can't be computed — distance and direction still work. Enable location in Settings." } }
+      }
+    },
+    "端末の姿勢を取得できないため方向を算出できません。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "The device's orientation isn't available, so direction can't be computed." } }
+      }
+    },
+    "設定を開く" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Settings" } }
+      }
+    },
     "95%範囲" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "95% range" } }
