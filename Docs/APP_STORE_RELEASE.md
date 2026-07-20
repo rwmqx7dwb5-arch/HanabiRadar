@@ -24,8 +24,9 @@
 
 ## 必須表示・URL（所有者が用意）
 
-- **WeatherKit 帰属表示**: Apple Weather の所定の帰属（`WeatherService.shared.attribution` の名称＋法的ページ
-  リンク）を、気象データを表示する画面に必ず出す。**未実装**（アダプタはあるが帰属 UI は要追加）。
+- **WeatherKit 帰属表示**: Apple Weather の所定の帰属（`WeatherService.shared.attribution` のマーク＋法的ページ
+  リンク）を `WeatherAttributionView` として**実装済み**（Settings の「気象データ」セクションに配置）。実 attribution
+  取得は WeatherKit entitlement が必要で、未署名時は法的ページ URL への fallback を表示。ライブ気象値を出す画面にも併記する。
 - **Support URL**: [`Docs/support/index.html`](support/index.html) を**作成済み**（JA+EN・自己完結）。所有者はこれをホスティングして URL 化する。
 - **Privacy Policy URL**: [`Docs/support/privacy.html`](support/privacy.html) を**作成済み**（[PRIVACY.md](PRIVACY.md) 準拠・JA+EN）。ホスティングして URL 化し、アプリ内からもリンク可能にする（アプリ内リンクは後続）。連絡先メールは所有者が差し替える。
 
@@ -64,7 +65,7 @@
 - [ ] Bundle ID・署名・WeatherKit entitlement 設定
 - [ ] StoreKit 商品を App Store Connect に登録・サンドボックス購入/復元確認
 - [ ] 本番広告 ID を安全に分離（xcconfig）・テスト広告で確認・ATT/UMP 同意
-- [ ] WeatherKit 帰属表示 UI を実装・表示確認
+- [x] WeatherKit 帰属表示 UI を実装（`WeatherAttributionView`・Settings 配置） → [ ] entitlement 付き実機でマーク取得・表示確認
 - [x] Support / Privacy Policy ページ**作成**（[Docs/support/](support/)）→ [ ] ホスティングして URL 化・アプリ内リンク・連絡先差し替え
 - [x] Privacy Manifest に Required-Reason API 宣言（UserDefaults `CA92.1`＋SystemBootTime `35F9.1`）→ [ ] SDK 追加時に App Privacy 回答を実挙動と一致させ更新
 - [x] **App Icon** 用意（1024 不透過・Accent 同梱）→ [ ] スクリーンショット撮影（Light/Dark）

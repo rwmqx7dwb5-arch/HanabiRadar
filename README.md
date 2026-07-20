@@ -164,7 +164,8 @@ Python 標準ライブラリのみで同じ数式を独立実装し、合成fixt
 - [x] StoreKit 構成ファイル（[`HanabiRadar.storekit`](HanabiRadar.storekit)・ローカル検証用）
 - [x] Info.plist 権限説明文の英語ローカライズ（`en.lproj`/`ja.lproj` InfoPlist.strings）
 - [x] アプリ内 UI 文字列のカタログ化（`Localizable.xcstrings` JA/EN・測定/結果/地図/履歴/設定/ランチャ） → [ ] アクセシビリティ仕上げ・`Formatting` 値文字列の英語化（後続）
-- [ ] WeatherKit 帰属表示 UI・対話的な限定モード（手動位置入力/方向のみ測定）・アクセシビリティ仕上げ（後続）
+- [x] WeatherKit 帰属表示 UI（`WeatherAttributionView`：Apple Weather マーク＋法的リンク／Settings の気象データ源セクション・entitlement 無時は fallback・`WeatherAttributionTests`＋UIスモーク）
+- [ ] 対話的な限定モード（手動位置入力/方向のみ測定）・アクセシビリティ仕上げ（後続）
 - [x] 必須ドキュメント一式（[ARCHITECTURE](Docs/ARCHITECTURE.md) / [SCIENCE_AND_MATH](Docs/SCIENCE_AND_MATH.md) / [PRIVACY](Docs/PRIVACY.md) / [MONETIZATION](Docs/MONETIZATION.md) / [TESTING](Docs/TESTING.md) / [APP_STORE_RELEASE](Docs/APP_STORE_RELEASE.md) / [APP_STORE_LISTING](Docs/APP_STORE_LISTING.md) / [THIRD_PARTY_NOTICES](Docs/THIRD_PARTY_NOTICES.md) / [KNOWN_LIMITATIONS](Docs/KNOWN_LIMITATIONS.md)）
 - [外部] 署名・WeatherKit entitlement・本番広告ID・App Store Connect 設定・TestFlight 提出
 

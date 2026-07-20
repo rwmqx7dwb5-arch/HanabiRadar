@@ -32,6 +32,13 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
             }
 
+            Section("気象データ") {
+                Text("音速補正のため、観測地点の現在の気象条件を Apple WeatherKit から取得します。取得時刻とデータ提供元は結果にも併記します。")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                WeatherAttributionView()
+            }
+
             if let onDeleteAllData {
                 Section {
                     Button("すべての履歴を削除", role: .destructive) { confirmingDelete = true }

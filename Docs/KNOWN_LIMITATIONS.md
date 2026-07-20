@@ -46,7 +46,9 @@
   ただし **実行には WeatherKit capability + entitlement と Apple Developer アカウント（所有者側）が必須**であり、
   実機・ネットワーク経由の取得結果は未検証。
 - Apple の要件により、WeatherKit データを表示する箇所には **`WeatherService.shared.attribution`（提供元表示）が必須**。
-  この帰属表示 UI はまだ未実装。
+  帰属表示 UI（`WeatherAttributionView`）を実装し Settings の「気象データ」セクションに配置した。ただし **実際の
+  `attribution` 取得は WeatherKit entitlement が必要**で、未署名 CI／モックでは Apple の法的ページ URL への fallback
+  （「Apple Weather」表記＋リンク）を表示する。今後ライブ気象値を表示する画面を実装したら、そこにも本ビューを併記すること。
 - 取得失敗時はコア（`BurstSolver.solve`）が観測点条件のみで計算を継続し、結果に「気象補正: 一部未適用」を表示する
   設計（§5）。失敗時フォールバックの UI 表示は app 側で未実装。
 
@@ -77,7 +79,7 @@
   モーション不可を区別し、権限系は「設定を開く」導線を出す。マッピングは `PermissionGuidanceTests`/`PermissionMappingTests` で
   検証し、degraded-mode の UI スモークで拒否時もクラッシュせず画面が出ることを確認する。**ただし対話的な代替入力
   （手動の観測地点指定・方向のみ測定 UI）は未実装**で、実機での実拒否時の挙動と 30 分連続試験は所有者側の実機検証が必要。
-- **WeatherKit 帰属表示 UI**・**実広告 SDK/ATT/UMP** は引き続き未実装。
+- **実広告 SDK/ATT/UMP** は引き続き未実装。WeatherKit 帰属表示 UI は実装済み（上記・実 attribution 取得は entitlement 要）。
 
 ## この開発環境に由来する制限
 
