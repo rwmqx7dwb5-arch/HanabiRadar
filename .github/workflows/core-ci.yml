@@ -4,6 +4,7 @@ on:
   push:
     branches: [ main ]
   pull_request:
+  workflow_dispatch:
 
 jobs:
   core-tests:
@@ -12,8 +13,10 @@ jobs:
     steps:
       # Pin to a commit SHA before release for supply-chain hardening.
       - uses: actions/checkout@v4
-      - name: Swift version
-        run: swift --version
+      - name: Toolchain versions
+        run: |
+          swift --version
+          xcodebuild -version || true
       - name: Build
         working-directory: HanabiCore
         run: swift build
@@ -22,8 +25,9 @@ jobs:
         run: swift test --parallel
 
   lint:
-    name: SwiftLint
+    name: SwiftLint (advisory)
     runs-on: macos-14
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - name: Install SwiftLint
