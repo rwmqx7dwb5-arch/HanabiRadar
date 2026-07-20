@@ -39,6 +39,10 @@
   - プレミアムは常に非表示。
   - **測定画面・カメラ起動前・爆発音待機中は常に非表示。**
   - インタースティシャルはセッション終了 / 履歴に限定し、頻度上限（既定 120 秒）を満たす場合のみ。
+- **同意アーキテクチャ（§19.3・§20）**: `ConsentService`（既定 `DefaultConsentService` は `.unknown` で**フェイルクローズ**＝
+  同意が解決するまで広告を出さず SDK も初期化しない）＋純粋な `ConsentGate`＋`AdCoordinator` で結線。非プレミアムは
+  **同意解決後のみ** SDK を初期化し、パーソナライズは同意に厳密追従（既定は非パーソナライズ）。インタースティシャルは
+  **同意ゲートと `AdPolicy` の両方**が許可した時のみ。プレミアムは同意を要求せず SDK も初期化しない。`ConsentTests` で検証。
 - **所有者側の作業**: Google Mobile Ads SDK（SPM）と UMP 同意 SDK の導入、本番広告 ID の安全な分離
   （xcconfig 等・リポジトリに直書きしない・§29）、ATT の適切な要求、App Privacy への反映、テスト広告 ID での検証。
 
@@ -49,6 +53,7 @@
 ## 実装状況（正直）
 
 - 実装済み・CI 検証: プロトコル群、`StoreKitPurchaseService`（ビルド緑）、`MockPurchaseService`、`AdPolicy`、
-  `.storekit` コンフィグ、**購入画面 UI（`PurchaseView` ＋ `PurchaseViewModel`：購入/復元/エンティトルメント表示・
-  `PurchaseViewModelTests` ＋ UI スモーク・広告なし画面）**、テスト。
-- 未実装（所有者側）: 実広告 SDK 結線、本番広告 ID、ATT/UMP 同意フロー、App Store Connect の商品登録・実購入/復元検証。
+  **同意アーキテクチャ（`ConsentService`/`ConsentGate`/`AdCoordinator`・`ConsentTests`）**、`.storekit` コンフィグ、
+  **購入画面 UI（`PurchaseView` ＋ `PurchaseViewModel`・`PurchaseViewModelTests` ＋ UI スモーク・広告なし画面）**、テスト。
+- 未実装（所有者側）: **実 UMP/ATT SDK の結線**（同意アーキテクチャは実装済み＝SDK 差込のみ）、実広告 SDK、本番広告 ID、
+  App Store Connect の商品登録・実購入/復元検証。
