@@ -1,0 +1,32 @@
+name: HanabiCore CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  core-tests:
+    name: Build & test estimation core
+    runs-on: macos-14
+    steps:
+      # Pin to a commit SHA before release for supply-chain hardening.
+      - uses: actions/checkout@v4
+      - name: Swift version
+        run: swift --version
+      - name: Build
+        working-directory: HanabiCore
+        run: swift build
+      - name: Test
+        working-directory: HanabiCore
+        run: swift test --parallel
+
+  lint:
+    name: SwiftLint
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SwiftLint
+        run: brew install swiftlint
+      - name: Lint
+        run: swiftlint --config .swiftlint.yml

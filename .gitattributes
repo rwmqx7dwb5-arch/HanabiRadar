@@ -1,0 +1,9 @@
+# Normalize line endings to LF in the repository (the app is built on macOS).
+* text=auto eol=lf
+
+# Binary assets must not be normalized.
+*.png -text
+*.jpg -text
+*.jpeg -text
+*.pdf -text
+*.xcassets/** -text

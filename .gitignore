@@ -1,0 +1,32 @@
+# macOS
+.DS_Store
+
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+*.xcscmblueprint
+xcuserdata/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Generated Xcode project (source of truth is project.yml via XcodeGen)
+*.xcodeproj/
+*.xcworkspace/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/
+
+# Secrets and per-machine configuration (never commit real keys or ad IDs)
+Secrets.xcconfig
+Ads.Release.xcconfig
+*.local.xcconfig
+
+# Fastlane / tooling artifacts
+fastlane/report.xml
+fastlane/screenshots/**/*.png
