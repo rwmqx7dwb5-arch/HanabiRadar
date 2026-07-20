@@ -33,7 +33,6 @@ struct RootView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .accessibilityIdentifier("root-view")
     }
 }
 
