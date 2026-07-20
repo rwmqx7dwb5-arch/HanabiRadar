@@ -6,8 +6,11 @@ import PackageDescription
 // the science verifiable independently of Xcode, the camera, or a device.
 let package = Package(
     name: "HanabiCore",
+    // The core uses no iOS-18-specific APIs, so it declares a conservative platform
+    // floor for broad toolchain compatibility during validation. The app itself still
+    // targets iOS 18 via its own project settings.
     platforms: [
-        .iOS(.v18),
+        .iOS(.v17),
         .macOS(.v13)
     ],
     products: [
