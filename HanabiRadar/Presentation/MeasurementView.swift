@@ -1,8 +1,9 @@
 import SwiftUI
 
 /// Skeleton measurement screen. The capture pipeline is wired via dependency injection
-/// (mock services in UI tests, device services at runtime). The full measurement UX
-/// (camera preview, guides, detection status) is built in later increments.
+/// (mock services in UI tests, device services at runtime). Camera + audio come from a
+/// single AVCaptureSession; motion + location from the coordinator. The full measurement
+/// UX (camera preview, guides, detection status) is built in later increments.
 struct MeasurementView: View {
     @StateObject private var model = MeasurementViewModel()
 
@@ -13,9 +14,10 @@ struct MeasurementView: View {
                 .accessibilityIdentifier("measurement-view")
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("状態: \(model.stateText)")
-                Text("姿勢サンプル: \(model.attitudeCount)")
-                Text("位置サンプル: \(model.locationCount)")
+                Text("AV状態: \(model.captureState)")
+                Text("映像フレーム: \(model.videoFrames)")
+                Text("音声サンプル: \(model.audioSamples)")
+                Text("姿勢: \(model.attitudeCount) / 位置: \(model.locationCount)")
             }
             .font(.body.monospaced())
             .padding()

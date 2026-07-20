@@ -1,15 +1,28 @@
 import HanabiCapture
 
-/// Builds a `CaptureCoordinator` with either mock or real device services.
+/// Builds capture components with either mock or real device backends.
 ///
 /// UI tests (and `-mock-sensors`) always get mocks, so the app runs in the Simulator
-/// without permission prompts or hardware. Otherwise the concrete AVFoundation /
-/// CoreMotion / CoreLocation services are used.
+/// without permission prompts or hardware. Camera + audio are captured by a single
+/// `AVCaptureSession` (unified controller); motion + location go through the coordinator.
 enum CaptureFactory {
-    static func makeCoordinator(logger: StructuredLogging) -> CaptureCoordinator {
+    static func makeUnifiedBackend() -> UnifiedCaptureBackend {
+        if AppLaunch.useMockSensors {
+            return MockUnifiedCaptureBackend()
+        }
+        return DeviceUnifiedCaptureSession()
+    }
+
+    static func makeUnifiedController() -> UnifiedCaptureController {
+        UnifiedCaptureController(backend: makeUnifiedBackend())
+    }
+
+    /// Motion + location run through the coordinator; camera + audio are handled by the
+    /// unified session, so the coordinator's AV slots use no-op mocks.
+    static func makeMotionLocationCoordinator(logger: StructuredLogging) -> CaptureCoordinator {
         if AppLaunch.useMockSensors {
             return CaptureCoordinator(
-                capacity: 1800,               // ~30 s at 60 Hz
+                capacity: 1800,
                 camera: MockCameraCaptureService(),
                 audio: MockAudioCaptureService(),
                 motion: MockMotionCaptureService(),
@@ -19,8 +32,8 @@ enum CaptureFactory {
         }
         return CaptureCoordinator(
             capacity: 1800,
-            camera: DeviceCameraCaptureService(),
-            audio: DeviceAudioCaptureService(),
+            camera: MockCameraCaptureService(),
+            audio: MockAudioCaptureService(),
             motion: DeviceMotionCaptureService(),
             location: DeviceLocationCaptureService(),
             logger: logger
