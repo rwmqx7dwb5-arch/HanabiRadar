@@ -84,7 +84,7 @@ struct BurstMapView: View {
         .accessibilityIdentifier("map-view")
     }
 
-    private func label(_ point: BurstMapPoint) -> String {
+    private func label(_ point: BurstMapPoint) -> LocalizedStringKey {
         switch point.kind {
         case .observer: return "観測地点"
         case .burst: return "爆発地点（推定）"

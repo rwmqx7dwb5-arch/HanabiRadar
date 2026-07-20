@@ -1,0 +1,336 @@
+{
+  "sourceLanguage" : "ja",
+  "strings" : {
+    "95%範囲" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "95% range" } }
+      }
+    },
+    "AV状態: %@" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A/V state: %@" } }
+      }
+    },
+    "この操作は取り消せません。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "This action cannot be undone." } }
+      }
+    },
+    "この画面は骨組みです。測定・結果・地図・履歴のUIは後続で実装します。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "This is a skeleton screen. The measurement, result, map, and history UI arrive in later increments." } }
+      }
+    },
+    "すべての履歴を削除" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete all history" } }
+      }
+    },
+    "すべての履歴を削除しますか？" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete all history?" } }
+      }
+    },
+    "エラー" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Error" } }
+      }
+    },
+    "キャンセル" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } }
+      }
+    },
+    "サンプル推定 (デモ)" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sample estimate (demo)" } }
+      }
+    },
+    "プレビュー" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Preview" } }
+      }
+    },
+    "プライバシー" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Privacy" } }
+      }
+    },
+    "映像フレーム: %lld" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Video frames: %lld" } }
+      }
+    },
+    "音声サンプル: %lld" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Audio samples: %lld" } }
+      }
+    },
+    "姿勢: %lld / 位置: %lld" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Attitude: %lld / Location: %lld" } }
+      }
+    },
+    "準備中" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Preparing" } }
+      }
+    },
+    "開始中" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Starting" } }
+      }
+    },
+    "測定可能" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ready" } }
+      }
+    },
+    "停止" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Stopped" } }
+      }
+    },
+    "測定" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Measure" } }
+      }
+    },
+    "測定 %lld/%lld 発 ・ 推定区域 %lld 箇所" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Measured %lld/%lld · %lld launch area(s)" } }
+      }
+    },
+    "代表距離 約 %@" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Representative distance ≈ %@" } }
+      }
+    },
+    "半径約 %@" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "radius ≈ %@" } }
+      }
+    },
+    "花火へカメラを向けて待つ操作に対応予定（現在は取得基盤の骨組み）。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Point the camera at the fireworks and wait — coming soon (this is the capture-foundation skeleton)." } }
+      }
+    },
+    "花火を測定すると、ここにセッションが保存されます。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Once you measure fireworks, your sessions are saved here." } }
+      }
+    },
+    "履歴" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "History" } }
+      }
+    },
+    "履歴はまだありません" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No history yet" } }
+      }
+    },
+    "履歴（デモ）へ" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "History (demo)" } }
+      }
+    },
+    "地図" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Map" } }
+      }
+    },
+    "地図（デモ）へ" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Map (demo)" } }
+      }
+    },
+    "設定" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } }
+      }
+    },
+    "設定へ" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Go to Settings" } }
+      }
+    },
+    "測定画面へ" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Go to Measurement" } }
+      }
+    },
+    "結果画面（デモ）へ" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Result (demo)" } }
+      }
+    },
+    "結果（デモ）" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Result (demo)" } }
+      }
+    },
+    "単位" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Units" } }
+      }
+    },
+    "距離をメートル法 (km/m) で表示" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Show distance in metric (km/m)" } }
+      }
+    },
+    "気温を華氏 (°F) で表示" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Show temperature in Fahrenheit (°F)" } }
+      }
+    },
+    "計算はすべて端末内で行い、生の映像・音声・正確な位置を外部へ送信しません。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "All calculations run on device; raw video, audio, and precise location are never sent off the device." } }
+      }
+    },
+    "端末内に保存した測定履歴をすべて削除します。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Deletes all measurement history stored on this device." } }
+      }
+    },
+    "削除" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete" } }
+      }
+    },
+    "推定（すべて推定値）" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Estimate (all values are estimates)" } }
+      }
+    },
+    "距離" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Distance" } }
+      }
+    },
+    "高さ" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Height" } }
+      }
+    },
+    "方位" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Azimuth" } }
+      }
+    },
+    "仰角" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Elevation" } }
+      }
+    },
+    "信頼度" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Confidence" } }
+      }
+    },
+    "総合" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Overall" } }
+      }
+    },
+    "主な誤差要因" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Main uncertainty factor" } }
+      }
+    },
+    "爆発地点の直下（推定）" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ground point below the burst (estimate)" } }
+      }
+    },
+    "緯度経度" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Lat/Lon" } }
+      }
+    },
+    "信頼度が低い / 範囲が広いため、鋭い点ではなく区域として表示しています。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Because confidence is low / the range is wide, this is shown as an area rather than a sharp point." } }
+      }
+    },
+    "実際の発射筒位置は 1 台の iPhone では確定できません。複数発の測定から「推定打ち上げ区域」として提示します。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A single iPhone cannot determine the exact launch tube position. It is presented as an \"estimated launch area\" from multiple bursts." } }
+      }
+    },
+    "観測地点" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Observation point" } }
+      }
+    },
+    "爆発地点（推定）" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Burst (estimate)" } }
+      }
+    },
+    "直下（推定）" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Subpoint (estimate)" } }
+      }
+    },
+    "高" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "High" } }
+      }
+    },
+    "中" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Medium" } }
+      }
+    },
+    "低" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Low" } }
+      }
+    },
+    "時間差" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Time difference" } }
+      }
+    },
+    "気温" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Temperature" } }
+      }
+    },
+    "音速" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sound speed" } }
+      }
+    },
+    "方位精度" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Heading accuracy" } }
+      }
+    },
+    "姿勢" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Attitude" } }
+      }
+    },
+    "GPS水平精度" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "GPS horizontal accuracy" } }
+      }
+    },
+    "GPS垂直精度" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "GPS vertical accuracy" } }
+      }
+    },
+    "対応付け" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pairing" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

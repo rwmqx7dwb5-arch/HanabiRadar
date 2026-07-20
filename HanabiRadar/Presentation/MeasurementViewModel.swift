@@ -7,7 +7,7 @@ import HanabiCapture
 /// coordinator. Everything is released on `stop`.
 @MainActor
 final class MeasurementViewModel: ObservableObject {
-    @Published private(set) var captureState = "準備中"
+    @Published private(set) var captureState = String(localized: "準備中")
     @Published private(set) var videoFrames = 0
     @Published private(set) var audioSamples = 0
     @Published private(set) var attitudeCount = 0
@@ -27,16 +27,16 @@ final class MeasurementViewModel: ObservableObject {
 
         let controller = CaptureFactory.makeUnifiedController()
         self.controller = controller
-        captureState = "開始中"
+        captureState = String(localized: "開始中")
         Task { @MainActor [weak self] in
             guard let self, let controller = self.controller else { return }
             do {
                 try await controller.start { [weak self] event in
                     Task { @MainActor in self?.handle(event) }
                 }
-                self.captureState = "測定可能"
+                self.captureState = String(localized: "測定可能")
             } catch {
-                self.captureState = "エラー"
+                self.captureState = String(localized: "エラー")
             }
         }
         refreshMotionLocation()
@@ -47,7 +47,7 @@ final class MeasurementViewModel: ObservableObject {
         coordinator = nil
         let controller = self.controller
         self.controller = nil
-        captureState = "停止"
+        captureState = String(localized: "停止")
         Task { await controller?.stop() }
         refreshMotionLocation()
     }
