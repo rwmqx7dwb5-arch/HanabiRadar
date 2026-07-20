@@ -26,6 +26,16 @@
 
 これらは Capture 層の実装とともに実機で測定し、`Docs`（実機検証結果）へ記録する。
 
+### Capture 実機サービス（Simulator コンパイル済み・実機実行未検証）
+
+- `Device{Camera,Audio,Motion,Location}CaptureService` は iOS Simulator でコンパイル検証済みだが、
+  Simulator にはカメラ・マイク・モーションが無いため**実行時挙動は未検証**（CI は UI テストで常にモックを使用）。
+- **共通時刻軸の整合**：Core Motion(`timestamp`=uptime)・Core Location(wall-clock→uptime正規化)・
+  音声(`AVAudioTime` host time)を同一 uptime 軸へ寄せているが、音声/映像/モーション間の残留オフセットは実機較正が必要。
+- **音声・映像の単一 AVCaptureSession 統合**（PTS 共有によるタイトな同期）は Phase 2（検出）で実施予定。現状の音声は
+  AVAudioEngine 別経路であり、A/V 同期精度は実機で検証する。
+- カメラのフレーム画素処理・内部行列のパイプライン供給は Phase 2 で結線する（現状はセッション確立と PTS 追跡のみ）。
+
 ## この開発環境に由来する制限
 
 - 本リポジトリを作成した環境は **Windows** であり、**Swift ツールチェーンが無いため `swift build` /
