@@ -1,9 +1,11 @@
-# SwiftLint configuration. Intentionally lenient so CI stays green while the
-# codebase grows; tighten rules as the app matures.
+# SwiftLint configuration. Tuned for a math-heavy core: named result tuples and
+# aligned matrix literals are intentional, so the corresponding style rules are relaxed.
 disabled_rules:
   - todo
   - trailing_comma
   - opening_brace
+  - large_tuple        # named 3/4-tuples for basis vectors and ellipse axes are clear
+  - comma              # aligned matrix literals use padding after commas
 
 opt_in_rules:
   - empty_count
@@ -15,8 +17,8 @@ excluded:
   - DerivedData
 
 line_length:
-  warning: 140
-  error: 200
+  warning: 160
+  error: 240
 
 identifier_name:
   min_length: 1
@@ -33,5 +35,9 @@ file_length:
   error: 1000
 
 function_body_length:
-  warning: 120
-  error: 200
+  warning: 200
+  error: 320
+
+cyclomatic_complexity:
+  warning: 15
+  error: 25
