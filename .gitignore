@@ -1,6 +1,10 @@
 # macOS
 .DS_Store
 
+# Windows / OneDrive
+desktop.ini
+Thumbs.db
+
 # Xcode
 build/
 DerivedData/
