@@ -1,0 +1,53 @@
+name: iOS App CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ios-build-test:
+    name: Build & test app (iOS Simulator, unsigned)
+    runs-on: macos-15
+    steps:
+      # Pin to a commit SHA before release for supply-chain hardening.
+      - uses: actions/checkout@v4
+      - name: Toolchain & runtimes (dynamic, not hardcoded)
+        run: |
+          xcodebuild -version
+          swift --version
+          echo "Available iOS simulator runtimes:"
+          xcrun simctl list runtimes available | grep -i ios || true
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        run: xcodegen generate
+      - name: Build (generic iOS Simulator, unsigned)
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -scheme HanabiRadar \
+            -destination 'generic/platform=iOS Simulator' \
+            -skipPackagePluginValidation \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Resolve an available iPhone simulator (no hardcoded device)
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available \
+            | grep -i 'iPhone' \
+            | grep -oE '[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}' \
+            | head -n1)
+          if [ -z "$UDID" ]; then
+            echo "No available iPhone simulator found"; exit 1
+          fi
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          echo "Using simulator UDID: $UDID"
+      - name: Test (iOS Simulator, unsigned)
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -scheme HanabiRadar \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -skipPackagePluginValidation \
+            CODE_SIGNING_ALLOWED=NO

@@ -1,0 +1,66 @@
+# XcodeGen spec. The .xcodeproj is generated (and git-ignored); this file is the
+# source of truth. Generate on macOS with: `brew install xcodegen && xcodegen generate`.
+name: HanabiRadar
+
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.10"
+    DEVELOPMENT_LANGUAGE: ja
+    ENABLE_USER_SCRIPT_SANDBOXING: "YES"
+
+packages:
+  HanabiCore:
+    path: HanabiCore
+
+targets:
+  HanabiRadar:
+    type: application
+    platform: iOS
+    sources:
+      - path: HanabiRadar
+        excludes:
+          - "**/Info.plist"
+    dependencies:
+      - package: HanabiCore
+        product: HanabiCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.hanabiradar
+        PRODUCT_NAME: HanabiRadar
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: "NO"
+        INFOPLIST_FILE: HanabiRadar/App/Info.plist
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGNING_ALLOWED: "NO"
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: ""
+
+  HanabiRadarTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: HanabiRadarTests
+    dependencies:
+      - target: HanabiRadar
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.hanabiradar.tests
+        GENERATE_INFOPLIST_FILE: "YES"
+        CODE_SIGNING_ALLOWED: "NO"
+
+schemes:
+  HanabiRadar:
+    build:
+      targets:
+        HanabiRadar: all
+        HanabiRadarTests: [test]
+    test:
+      targets:
+        - HanabiRadarTests
