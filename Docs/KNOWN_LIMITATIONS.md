@@ -16,6 +16,9 @@
 
 - Core Location の高度は概ね平均海面基準で、楕円体高やジオイド高と混同しない。地表標高が無い場合は
   「地上高」を表示しない（[SCIENCE_AND_MATH](SCIENCE_AND_MATH.md) §6）。
+- コアには地上高の解決機構（`ElevationProviding` 契約＋`BurstSolver` 最終段）が実装済みで、取得不能・失敗・
+  `nil` のいずれでも MSL・相対高度のみを返し AGL を捏造しないことを `ElevationTests` で検証する。ただし
+  **実際の標高データ源（app 側 DEM アダプタ）は未接続**であり、それが接続されるまで AGL は提示されない。
 
 ## 実機で検証が必要な項目（未検証）
 

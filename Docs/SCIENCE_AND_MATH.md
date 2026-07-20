@@ -133,6 +133,18 @@ P_burst(ECEF) = P_observer(ECEF) + d · (ENU→ECEF)·r_ENU
 - **海抜推定高度**（MSL）／**観測点からの相対高度**／**地上高**を区別する。
 - ジオイド分離・地表標高の適用は app 側 `ElevationProvider` の責務。地表標高が得られないときは「地上高」と表示しない。
 
+地上高の算出（`ElevationProviding` 実装時、`BurstSolver.solve` の最終段）:
+
+```
+g = ElevationProviding.elevation(at: subpoint)      // 直下地点の地表標高
+heightAboveGround = burst.altitude − g              // g が得られたときのみ
+subpoint.altitude = g
+```
+
+- 取得できない／`nil`／失敗のいずれでも `groundElevation`・`heightAboveGround` は `nil` のままとし、MSL・相対高度のみを提示する（`BurstSolver.solve` がこの分岐を保証し、`ElevationTests` が検証する）。
+- 表示時は地表標高のデータ提供元・解像度・取得時刻またはデータ版（`ElevationSample.source / resolutionMeters / dataVersion`）を併記する。
+- `burst.altitude` と `g` は同一の鉛直基準系である前提で差をとる。基準系が異なる場合の残差は誤差予算・注意書きで扱い、過剰な精度を主張しない。
+
 ## 7. 誤差推定（モンテカルロ）
 
 各試行で入力を摂動して決定論ソルバを再実行し、母集団から区間・楕円・信頼度を得る（`UncertaintyEstimator`）。
@@ -164,3 +176,17 @@ P_burst(ECEF) = P_observer(ECEF) + d · (ENU→ECEF)·r_ENU
 - 反響と実音の完全分離（複数候補を保持し、信頼度へ反映）。
 
 これらは製品表示で誇張せず、推定・区域・誤差として提示する。
+
+## 10. 独立実装によるクロス検証（合成データfixture）
+
+`tools/reference/hanabi_reference.py` は同じ数式を Python で独立実装した参照オラクルである。標準ライブラリのみで、
+音速（乾燥・湿度・風）、WGS84 測地変換、カメラレイ、既知真値からの爆発位置復元を計算し、
+`HanabiCore/Tests/HanabiCoreTests/Fixtures/reference_scenes.json` を生成する。あわせて測地往復と真値復元の
+自己検証を行う。
+
+`ReferenceFixtureTests` はこの JSON を読み込み、Swift コアの出力が独立実装と一致することを検証する
+（音速・カメラレイは ~1e-9、位置は緯度経度 1e-6°・高度/距離 0.1 m 以内、方位はラップ考慮）。言語・処理系を
+またいで同一の答えになることを担保し、委託書 §24.2 の合成データ検証を二重化する。
+
+再生成: `python tools/reference/hanabi_reference.py`。Python は乱数・時刻に依存しないため出力は決定論的で、
+生成物はリポジトリにコミットする。

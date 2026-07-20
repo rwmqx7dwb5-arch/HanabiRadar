@@ -96,13 +96,17 @@ public struct BurstSolver: Sendable {
         )
     }
 
-    /// Full pipeline with iterative weather correction. When `weatherProvider` is nil,
-    /// or a fetch fails, the result uses the observer-only conditions and reports how
-    /// many iterations actually ran.
+    /// Full pipeline with iterative weather correction and optional ground-height
+    /// resolution. When `weatherProvider` is nil, or a fetch fails, the result uses the
+    /// observer-only conditions and reports how many iterations actually ran. When
+    /// `elevationProvider` yields a sample at the subpoint, the estimate gains a height
+    /// above ground; when it is nil, returns nil, or fails, only MSL / relative height
+    /// is reported and no height above ground is fabricated (commissioning §13, §21).
     public func solve(
         _ sighting: Sighting,
         observerWeather: WeatherConditions,
         weatherProvider: WeatherConditionsProviding? = nil,
+        elevationProvider: ElevationProviding? = nil,
         options: Options = Options()
     ) async -> BurstEstimate {
         let ray = enuRay(for: sighting)
@@ -124,37 +128,50 @@ public struct BurstSolver: Sendable {
             iterations: 0
         )
 
-        guard let provider = weatherProvider else { return current }
+        if let provider = weatherProvider {
+            for iteration in 1...Swift.max(1, options.maxIterations) {
+                let burstWeather: WeatherConditions
+                do {
+                    burstWeather = try await provider.conditions(at: current.burst)
+                } catch {
+                    break   // Fetch failed: keep the last good estimate.
+                }
+                let temperature = 0.5 * (observerWeather.temperatureCelsius + burstWeather.temperatureCelsius)
+                let humidity = 0.5 * (observerWeather.relativeHumidity + burstWeather.relativeHumidity)
+                let pressure = 0.5 * (observerWeather.pressureHPa + burstWeather.pressureHPa)
+                let windMean = (observerWeather.windVectorENU + burstWeather.windVectorENU) * 0.5
 
-        for iteration in 1...Swift.max(1, options.maxIterations) {
-            let burstWeather: WeatherConditions
-            do {
-                burstWeather = try await provider.conditions(at: current.burst)
-            } catch {
-                break   // Fetch failed: keep the last good estimate.
+                speed = soundModel.effectiveSpeed(
+                    temperatureCelsius: temperature,
+                    relativeHumidity: humidity,
+                    pressureHPa: pressure,
+                    windENU: windMean,
+                    pathUnitBurstToObserver: pathBurstToObserver
+                )
+                let next = estimate(
+                    observer: sighting.observer,
+                    enuRay: ray,
+                    deltaT: sighting.deltaT,
+                    effectiveSoundSpeed: speed,
+                    iterations: iteration
+                )
+                let moved = abs(next.lineOfSightDistance - current.lineOfSightDistance)
+                current = next
+                if moved < options.convergenceMeters { break }
             }
-            let temperature = 0.5 * (observerWeather.temperatureCelsius + burstWeather.temperatureCelsius)
-            let humidity = 0.5 * (observerWeather.relativeHumidity + burstWeather.relativeHumidity)
-            let pressure = 0.5 * (observerWeather.pressureHPa + burstWeather.pressureHPa)
-            let windMean = (observerWeather.windVectorENU + burstWeather.windVectorENU) * 0.5
+        }
 
-            speed = soundModel.effectiveSpeed(
-                temperatureCelsius: temperature,
-                relativeHumidity: humidity,
-                pressureHPa: pressure,
-                windENU: windMean,
-                pathUnitBurstToObserver: pathBurstToObserver
-            )
-            let next = estimate(
-                observer: sighting.observer,
-                enuRay: ray,
-                deltaT: sighting.deltaT,
-                effectiveSoundSpeed: speed,
-                iterations: iteration
-            )
-            let moved = abs(next.lineOfSightDistance - current.lineOfSightDistance)
-            current = next
-            if moved < options.convergenceMeters { break }
+        // Ground-relative height is resolved last, from the converged subpoint, and is
+        // optional: a missing or failing elevation source leaves MSL / relative height
+        // intact and never fabricates a height above ground (commissioning §13, §21).
+        if let elevationProvider {
+            do {
+                if let sample = try await elevationProvider.elevation(at: current.subpoint) {
+                    current = current.applyingGroundElevation(sample)
+                }
+            } catch {
+                // Elevation fetch failed: keep the weather-corrected MSL estimate.
+            }
         }
         return current
     }

@@ -20,6 +20,15 @@ public struct BurstEstimate: Equatable, Sendable {
     public var iterations: Int
     /// The estimation-core version that produced this result.
     public var calculationVersion: String
+    /// Terrain elevation directly below the burst, meters, if a ground-elevation
+    /// source was available. `nil` means the ground is unknown here — in which case
+    /// no height-above-ground is claimed (commissioning §13).
+    public var groundElevation: Double?
+    /// Burst height above the terrain below it (`burst.altitude - groundElevation`),
+    /// meters. `nil` whenever `groundElevation` is `nil`.
+    public var heightAboveGround: Double?
+    /// Attribution for the ground elevation used, if any.
+    public var elevationSource: String?
 
     public init(
         burst: GeodeticCoordinate,
@@ -31,7 +40,10 @@ public struct BurstEstimate: Equatable, Sendable {
         relativeHeight: Double,
         effectiveSoundSpeed: Double,
         iterations: Int,
-        calculationVersion: String
+        calculationVersion: String,
+        groundElevation: Double? = nil,
+        heightAboveGround: Double? = nil,
+        elevationSource: String? = nil
     ) {
         self.burst = burst
         self.subpoint = subpoint
@@ -43,6 +55,27 @@ public struct BurstEstimate: Equatable, Sendable {
         self.effectiveSoundSpeed = effectiveSoundSpeed
         self.iterations = iterations
         self.calculationVersion = calculationVersion
+        self.groundElevation = groundElevation
+        self.heightAboveGround = heightAboveGround
+        self.elevationSource = elevationSource
+    }
+
+    /// Returns a copy with terrain-relative height resolved from a ground-elevation
+    /// sample taken at the subpoint. Passing `nil` returns the estimate unchanged: the
+    /// ground fields stay `nil` and the caller must present MSL / relative height only,
+    /// never a fabricated height above ground (commissioning §13).
+    public func applyingGroundElevation(_ sample: ElevationSample?) -> BurstEstimate {
+        guard let sample else { return self }
+        var copy = self
+        copy.groundElevation = sample.elevation
+        copy.heightAboveGround = burst.altitude - sample.elevation
+        copy.elevationSource = sample.source
+        copy.subpoint = GeodeticCoordinate(
+            latitude: subpoint.latitude,
+            longitude: subpoint.longitude,
+            altitude: sample.elevation
+        )
+        return copy
     }
 }
 
