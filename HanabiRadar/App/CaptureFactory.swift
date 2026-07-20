@@ -39,4 +39,19 @@ enum CaptureFactory {
             logger: logger
         )
     }
+
+    /// Reads sensor authorization. UI tests / `-mock-sensors` get a static reader (all
+    /// authorized, so the measurement screen isn't gated); a `-force-mic-denied` UI test
+    /// injects a denial to exercise the degraded-mode banner. Real builds probe the OS.
+    static func makePermissionsService() -> PermissionsReading {
+        if AppLaunch.useMockSensors {
+            if AppLaunch.forceMicrophoneDenied {
+                return StaticPermissionsService(SensorPermissions(
+                    camera: .authorized, microphone: .denied, location: .authorized, motion: .authorized
+                ))
+            }
+            return StaticPermissionsService()
+        }
+        return DevicePermissionsService()
+    }
 }

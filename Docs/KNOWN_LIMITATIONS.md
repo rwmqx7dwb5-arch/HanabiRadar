@@ -72,7 +72,12 @@
   実価格は App Store Connect で設定する。
 - **購入画面 UI**（`PurchaseView` ＋ `PurchaseViewModel`）は実装済み（`MockPurchaseService` で UI/VM を検証）。
   ただし**実購入・購入復元は StoreKit 商品登録＋実機/サンドボックス（所有者側）が必要**で、実行時挙動は未検証。
-- **WeatherKit 帰属表示 UI**・**権限拒否時の限定モード UI**・**実広告 SDK/ATT/UMP** は引き続き未実装。
+- **権限拒否時の限定モード（§21）**: 認可プローブ（`PermissionsReading`＝Camera/Mic/Location の実機認可読取＋Motion 可用性）
+  ＋案内バナー（`PermissionBanner`）を実装。カメラ拒否＝測定不可案内／マイク拒否＝方向のみ／位置拒否＝緯度経度なし／
+  モーション不可を区別し、権限系は「設定を開く」導線を出す。マッピングは `PermissionGuidanceTests`/`PermissionMappingTests` で
+  検証し、degraded-mode の UI スモークで拒否時もクラッシュせず画面が出ることを確認する。**ただし対話的な代替入力
+  （手動の観測地点指定・方向のみ測定 UI）は未実装**で、実機での実拒否時の挙動と 30 分連続試験は所有者側の実機検証が必要。
+- **WeatherKit 帰属表示 UI**・**実広告 SDK/ATT/UMP** は引き続き未実装。
 
 ## この開発環境に由来する制限
 

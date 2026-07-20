@@ -18,4 +18,10 @@ enum AppLaunch {
     static var useMockSensors: Bool {
         isUITest || CommandLine.arguments.contains("-mock-sensors")
     }
+
+    /// UI-test hook: forces a microphone denial so the degraded-mode permission banner
+    /// (§21) can be smoke-tested in the Simulator. Only honored with mock sensors.
+    static var forceMicrophoneDenied: Bool {
+        useMockSensors && CommandLine.arguments.contains("-force-mic-denied")
+    }
 }
