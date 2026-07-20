@@ -26,7 +26,11 @@
   - `restore()` は `AppStore.sync()` 後にエンティトルメント再判定。
 - テスト用に `MockPurchaseService`（actor）。`MonetizationTests` で購入→プレミアム化・キャンセル時非プレミアム・
   復元を検証。
-- **所有者側の作業**: App Store Connect での商品登録、`.storekit` コンフィグ、署名・実機/サンドボックス検証。
+- **購入画面 UI**: `PurchaseView`（`PurchaseViewModel` 経由で `PurchaseService` にバインド）。購入・購入復元・
+  現在のエンティトルメント表示を持ち、価格は StoreKit の購入シートに委ねる（コード非固定）。この画面に広告は出さない。
+  `PurchaseViewModelTests`（購入→プレミアム・キャンセル/失敗は非プレミアム・復元）と UI スモークで検証。
+- ローカル検証用の `.storekit` コンフィグ（[`HanabiRadar.storekit`](../HanabiRadar.storekit)）を同梱（スキームへの結線は Xcode 側）。
+- **所有者側の作業**: App Store Connect での商品登録、署名・実機/サンドボックス検証。
 
 ## 広告
 
@@ -44,5 +48,7 @@
 
 ## 実装状況（正直）
 
-- 実装済み・CI 検証: プロトコル群、`StoreKitPurchaseService`（ビルド緑）、`MockPurchaseService`、`AdPolicy`、テスト。
-- 未実装: 購入画面 UI、実 SDK 結線、本番 ID、ATT/UMP 同意フロー（いずれも所有者側入力が必要）。
+- 実装済み・CI 検証: プロトコル群、`StoreKitPurchaseService`（ビルド緑）、`MockPurchaseService`、`AdPolicy`、
+  `.storekit` コンフィグ、**購入画面 UI（`PurchaseView` ＋ `PurchaseViewModel`：購入/復元/エンティトルメント表示・
+  `PurchaseViewModelTests` ＋ UI スモーク・広告なし画面）**、テスト。
+- 未実装（所有者側）: 実広告 SDK 結線、本番広告 ID、ATT/UMP 同意フロー、App Store Connect の商品登録・実購入/復元検証。

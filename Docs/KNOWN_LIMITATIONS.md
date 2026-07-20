@@ -67,7 +67,9 @@
   ホスティング URL・スクリーンショット・年齢レーティングの最終回答は所有者が確定する。
 - **StoreKit 構成ファイル**: `HanabiRadar.storekit` はローカル検証用で、スキームには未結線（Xcode 側で有効化）。
   実価格は App Store Connect で設定する。
-- **WeatherKit 帰属表示 UI**・**購入画面 UI**・**権限拒否時の限定モード UI** は引き続き未実装。
+- **購入画面 UI**（`PurchaseView` ＋ `PurchaseViewModel`）は実装済み（`MockPurchaseService` で UI/VM を検証）。
+  ただし**実購入・購入復元は StoreKit 商品登録＋実機/サンドボックス（所有者側）が必要**で、実行時挙動は未検証。
+- **WeatherKit 帰属表示 UI**・**権限拒否時の限定モード UI**・**実広告 SDK/ATT/UMP** は引き続き未実装。
 
 ## この開発環境に由来する制限
 

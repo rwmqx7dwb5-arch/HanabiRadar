@@ -330,6 +330,106 @@
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Pairing" } }
       }
+    },
+    "プレミアム" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Premium" } }
+      }
+    },
+    "プレミアムでできること" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "What Premium adds" } }
+      }
+    },
+    "広告を非表示" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Remove ads" } }
+      }
+    },
+    "履歴を無制限に保存" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unlimited saved history" } }
+      }
+    },
+    "CSV / JSON / GeoJSON エクスポート" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "CSV / JSON / GeoJSON export" } }
+      }
+    },
+    "詳細な誤差情報" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Detailed uncertainty" } }
+      }
+    },
+    "プレミアムをご利用中です。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "You have Premium." } }
+      }
+    },
+    "プレミアムを購入" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Buy Premium" } }
+      }
+    },
+    "購入を復元" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Restore purchase" } }
+      }
+    },
+    "推定エンジンは無料版と同一です。プレミアムは広告・保存・エクスポート・詳細な誤差情報にのみ影響します。価格は購入時に表示されます。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "The estimation engine is identical to the free version. Premium only affects ads, saving, export, and detailed uncertainty. The price is shown at purchase." } }
+      }
+    },
+    "確認中…" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Checking…" } }
+      }
+    },
+    "未購入" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Not purchased" } }
+      }
+    },
+    "購入済み" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Purchased" } }
+      }
+    },
+    "購入が完了しました。ありがとうございます。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Purchase complete. Thank you!" } }
+      }
+    },
+    "購入をキャンセルしました。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Purchase cancelled." } }
+      }
+    },
+    "購入は保留中です。承認をお待ちください。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Purchase pending — awaiting approval." } }
+      }
+    },
+    "購入を完了できませんでした。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Couldn't complete the purchase." } }
+      }
+    },
+    "購入を復元しました。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Purchase restored." } }
+      }
+    },
+    "復元できる購入はありませんでした。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No purchases to restore." } }
+      }
+    },
+    "復元を完了できませんでした。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Couldn't complete the restore." } }
+      }
     }
   },
   "version" : "1.0"

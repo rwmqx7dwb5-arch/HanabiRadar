@@ -58,6 +58,12 @@ struct RootView: View {
                 .buttonStyle(.bordered)
                 .accessibilityIdentifier("go-settings")
 
+                NavigationLink("プレミアム") {
+                    DemoPurchaseScreen()
+                }
+                .buttonStyle(.bordered)
+                .accessibilityIdentifier("go-purchase")
+
                 Text("この画面は骨組みです。測定・結果・地図・履歴のUIは後続で実装します。")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
