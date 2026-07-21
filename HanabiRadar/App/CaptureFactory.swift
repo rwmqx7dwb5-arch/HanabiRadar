@@ -13,10 +13,6 @@ enum CaptureFactory {
         return DeviceUnifiedCaptureSession()
     }
 
-    static func makeUnifiedController() -> UnifiedCaptureController {
-        UnifiedCaptureController(backend: makeUnifiedBackend())
-    }
-
     /// Motion + location run through the coordinator; camera + audio are handled by the
     /// unified session, so the coordinator's AV slots use no-op mocks.
     static func makeMotionLocationCoordinator(logger: StructuredLogging) -> CaptureCoordinator {

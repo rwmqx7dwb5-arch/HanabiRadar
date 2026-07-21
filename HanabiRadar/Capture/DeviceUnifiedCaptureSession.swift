@@ -11,7 +11,8 @@ import HanabiCapture
 /// Compile-verified on the iOS Simulator; runtime behavior needs a physical device.
 /// Camera-intrinsics and audio-RMS extraction from the sample buffers are refined with
 /// the detectors in the next increments.
-final class DeviceUnifiedCaptureSession: NSObject, UnifiedCaptureBackend, @unchecked Sendable,
+final class DeviceUnifiedCaptureSession: NSObject, UnifiedCaptureBackend, CameraPreviewSource,
+    @unchecked Sendable,
     AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
 
     private let session = AVCaptureSession()
@@ -62,6 +63,13 @@ final class DeviceUnifiedCaptureSession: NSObject, UnifiedCaptureBackend, @unche
         defer { lock.unlock() }
         return resources
     }
+
+    // MARK: - Preview
+
+    /// Exposes the single `AVCaptureSession` so a preview layer can render the live feed.
+    /// The session instance is stable across start/stop, so the layer stays attached; it
+    /// simply shows frames once the session is running.
+    var previewSession: AVCaptureSession? { session }
 
     // MARK: - Helpers (lock-guarded shared state)
 

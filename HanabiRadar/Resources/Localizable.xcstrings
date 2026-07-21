@@ -1,6 +1,16 @@
 {
   "sourceLanguage" : "ja",
   "strings" : {
+    "花火へカメラを向けて待ちます。発光と爆発音を自動で検出します。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Point the camera at the fireworks and wait. The flash and blast are detected automatically." } }
+      }
+    },
+    "カメラプレビュー（実機で表示）" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Camera preview (shown on device)" } }
+      }
+    },
     "診断" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Diagnostics" } }
