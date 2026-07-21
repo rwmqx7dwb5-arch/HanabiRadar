@@ -14,6 +14,9 @@ final class MeasurementViewModel: ObservableObject {
     /// Peak luminance (0...1) of the most recent video frame, extracted live. A visible
     /// signal that real luminance features are flowing (the flash detector reads the same).
     @Published private(set) var latestPeakLuminance = 0.0
+    /// Short-time energy of the most recent audio window, extracted live — a visible signal
+    /// that real audio features are flowing (the bang detector reads the same).
+    @Published private(set) var latestAudioEnergy = 0.0
     @Published private(set) var attitudeCount = 0
     @Published private(set) var locationCount = 0
     /// The best measurement mode the current permissions allow (§21); drives the banner.
@@ -84,8 +87,9 @@ final class MeasurementViewModel: ObservableObject {
         case .video(let luminance, _):
             videoFrames += 1
             latestPeakLuminance = luminance.peakLuminance
-        case .audio:
+        case .audio(let features):
             audioSamples += 1
+            latestAudioEnergy = features.energy
         }
     }
 
