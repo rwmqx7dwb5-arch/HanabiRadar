@@ -49,7 +49,7 @@
 
 ## その他アセット
 
-- **App Icon**: **ユーザー提供**の夜空＋花火デザインを採用（[`Assets.xcassets/AppIcon.appiconset`](../HanabiRadar/Resources/Assets.xcassets/AppIcon.appiconset)・元画像 1254px から黒縁を除去し 1024 不透過 RGB へ full-bleed 化、単一サイズを Xcode がダウンサンプル）。Accent Color（Light/Dark）も同梱。**注意: アイコン内の表記が「Hanabi Rader」となっており、ストア名「Hanabi Radar」と綴りが不一致。提出前に画像を差し替えるか名称を確定すること。**
+- **App Icon**: **ユーザー提供**の夜空＋花火デザインを採用（[`Assets.xcassets/AppIcon.appiconset`](../HanabiRadar/Resources/Assets.xcassets/AppIcon.appiconset)・元画像 1254px から黒縁を除去し 1024 不透過 RGB へ full-bleed 化、単一サイズを Xcode がダウンサンプル）。Accent Color（Light/Dark）も同梱。アイコン内表記は「Hanabi Radar」（Phase 6l で綴り修正済み・正式名称確定）。
 - **スクリーンショット構成案**: ①測定画面（ガイド/水平器/方位）②結果（距離・信頼度）③地図（観測/爆発/直下/95%範囲）
   ④推定打ち上げ区域 ⑤履歴。
 - **Light/Dark 表示確認**: 暗色 UI 基調・低輝度モード。両表示で確認。
