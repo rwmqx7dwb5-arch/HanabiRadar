@@ -72,6 +72,7 @@ struct MeasurementView: View {
             Group {
                 Text("AV状態: \(model.captureState)")
                 Text("映像フレーム: \(model.videoFrames)")
+                Text("最大輝度: \(Int((model.latestPeakLuminance * 100).rounded()))％")
                 Text("音声サンプル: \(model.audioSamples)")
                 Text("姿勢: \(model.attitudeCount) / 位置: \(model.locationCount)")
             }

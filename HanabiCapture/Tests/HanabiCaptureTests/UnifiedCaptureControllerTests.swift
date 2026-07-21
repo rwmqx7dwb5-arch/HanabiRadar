@@ -63,9 +63,14 @@ final class UnifiedCaptureControllerTests: XCTestCase {
         try await controller.start { event in collector.add(event) }
 
         let intrinsics = CameraIntrinsics(fx: 1600, fy: 1600, cx: 960, cy: 540, width: 1920, height: 1080)
+        let luminance = FrameLuminanceSample(
+            time: CaptureTimestamp(seconds: 10.0),
+            meanLuminance: 0.1, peakLuminance: 0.8, brightArea: 0.03,
+            brightCentroid: NormalizedPoint(x: 0.5, y: 0.5)
+        )
         backend.emit(.sample(UnifiedSample(
             time: CaptureTimestamp(seconds: 10.0),
-            payload: .video(FrameMetadata(intrinsics: intrinsics, lensIdentifier: "wide", frameRate: 60))
+            payload: .video(luminance, metadata: FrameMetadata(intrinsics: intrinsics, lensIdentifier: "wide", frameRate: 60))
         )))
         backend.emit(.sample(UnifiedSample(
             time: CaptureTimestamp(seconds: 14.3),
