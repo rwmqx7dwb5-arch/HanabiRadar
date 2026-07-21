@@ -2,6 +2,7 @@ import Foundation
 import AVFoundation
 import CoreMedia
 import CoreVideo
+import AudioToolbox
 import HanabiCore
 import HanabiCapture
 
@@ -10,9 +11,10 @@ import HanabiCapture
 /// estimator relies on for flash-to-bang). `start`/`stop` complete asynchronously and
 /// `stop` fully tears the session down.
 ///
-/// Compile-verified on the iOS Simulator; runtime behavior needs a physical device.
-/// Camera-intrinsics and audio-RMS extraction from the sample buffers are refined with
-/// the detectors in the next increments.
+/// Video frames yield luminance features + camera intrinsics; audio buffers are decoded to
+/// mono PCM and windowed into audio features — both on the shared clock, feeding the flash
+/// and bang detectors. Compile-verified on the iOS Simulator; the live sample-buffer
+/// handling is exercised on a physical device via TestFlight.
 final class DeviceUnifiedCaptureSession: NSObject, UnifiedCaptureBackend, CameraPreviewSource,
     @unchecked Sendable,
     AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
@@ -25,6 +27,9 @@ final class DeviceUnifiedCaptureSession: NSObject, UnifiedCaptureBackend, Camera
     private var onEvent: (@Sendable (UnifiedEvent) -> Void)?
     private var resources: Set<CaptureResource> = []
     private var routeObserver: NSObjectProtocol?
+    /// Windows the microphone PCM into `AudioFeatureFrame`s. Created lazily once the real
+    /// sample rate is known; touched only on `queue` (captureOutput / teardown).
+    private var audioExtractor: AudioFeatureExtractor?
 
     func start(_ onEvent: @escaping @Sendable (UnifiedEvent) -> Void) async throws {
         setHandler(onEvent)
@@ -49,6 +54,8 @@ final class DeviceUnifiedCaptureSession: NSObject, UnifiedCaptureBackend, Camera
                 for output in self.session.outputs { self.session.removeOutput(output) }
                 for input in self.session.inputs { self.session.removeInput(input) }
                 self.session.commitConfiguration()
+                self.audioExtractor?.reset()
+                self.audioExtractor = nil
                 continuation.resume()
             }
         }
@@ -163,12 +170,60 @@ final class DeviceUnifiedCaptureSession: NSObject, UnifiedCaptureBackend, Camera
         if output === videoOutput {
             emit(.sample(UnifiedSample(time: time, payload: videoPayload(from: sampleBuffer, time: time))))
         } else {
-            // Placeholder features until the PCM parsing + AudioFeatureExtractor are wired in
-            // the next increment; carries the shared-clock timestamp so pairing stays valid.
-            emit(.sample(UnifiedSample(time: time, payload: .audio(AudioFeatureFrame(
-                time: time, energy: 0, spectralFlux: 0, lowBandEnergy: 0
-            )))))
+            for frame in audioFrames(from: sampleBuffer, time: time) {
+                emit(.sample(UnifiedSample(time: frame.time, payload: .audio(frame))))
+            }
         }
+    }
+
+    // MARK: - Audio feature extraction
+
+    /// Decodes the microphone sample buffer to mono PCM and windows it into
+    /// `AudioFeatureFrame`s via the shared `AudioFeatureExtractor` (created lazily at the
+    /// real sample rate). Returns an empty array for unsupported formats — audio simply
+    /// stays silent rather than crashing. Called only on `queue`.
+    private func audioFrames(from sampleBuffer: CMSampleBuffer, time: CaptureTimestamp) -> [AudioFeatureFrame] {
+        guard let formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer),
+              let asbdPointer = CMAudioFormatDescriptionGetStreamBasicDescription(formatDescription) else {
+            return []
+        }
+        let asbd = asbdPointer.pointee
+        guard asbd.mFormatID == kAudioFormatLinearPCM, asbd.mSampleRate > 0 else { return [] }
+
+        let isFloat = (asbd.mFormatFlags & kAudioFormatFlagIsFloat) != 0
+        let nonInterleaved = (asbd.mFormatFlags & kAudioFormatFlagIsNonInterleaved) != 0
+        let channels = Int(asbd.mChannelsPerFrame)
+        let frameStride = nonInterleaved ? 1 : max(channels, 1)
+
+        var blockBuffer: CMBlockBuffer?
+        var audioBufferList = AudioBufferList()
+        let status = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(
+            sampleBuffer,
+            bufferListSizeNeededOut: nil,
+            bufferListOut: &audioBufferList,
+            bufferListSize: MemoryLayout<AudioBufferList>.stride,
+            blockBufferAllocator: kCFAllocatorDefault,
+            blockBufferMemoryAllocator: kCFAllocatorDefault,
+            flags: 0,
+            blockBufferOut: &blockBuffer
+        )
+        guard status == noErr else { return [] }
+
+        let buffers = UnsafeMutableAudioBufferListPointer(&audioBufferList)
+        guard let first = buffers.first, let data = first.mData, first.mDataByteSize > 0 else { return [] }
+        let bytes = [UInt8](UnsafeRawBufferPointer(start: data, count: Int(first.mDataByteSize)))
+
+        let samples = PCMConverter.channelZero(
+            bytes, isFloat: isFloat, bitsPerChannel: Int(asbd.mBitsPerChannel), frameStride: frameStride
+        )
+        guard !samples.isEmpty else { return [] }
+
+        let extractor = audioExtractor ?? {
+            let new = AudioFeatureExtractor(config: .init(sampleRate: asbd.mSampleRate))
+            audioExtractor = new
+            return new
+        }()
+        return extractor.process(samples, startTime: time)
     }
 
     // MARK: - Video feature extraction

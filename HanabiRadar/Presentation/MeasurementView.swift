@@ -73,7 +73,8 @@ struct MeasurementView: View {
                 Text("AV状態: \(model.captureState)")
                 Text("映像フレーム: \(model.videoFrames)")
                 Text("最大輝度: \(Int((model.latestPeakLuminance * 100).rounded()))％")
-                Text("音声サンプル: \(model.audioSamples)")
+                Text("音声フレーム: \(model.audioSamples)")
+                Text("音圧: \(String(format: "%.3f", model.latestAudioEnergy))")
                 Text("姿勢: \(model.attitudeCount) / 位置: \(model.locationCount)")
             }
             .font(.footnote.monospaced())
