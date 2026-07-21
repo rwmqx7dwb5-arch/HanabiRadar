@@ -1,6 +1,26 @@
 {
   "sourceLanguage" : "ja",
   "strings" : {
+    "履歴へ" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "History" } }
+      }
+    },
+    "履歴に保存" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Save to history" } }
+      }
+    },
+    "保存済み" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Saved" } }
+      }
+    },
+    "保存に失敗しました" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Couldn’t save" } }
+      }
+    },
     "解析する" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Analyze" } }

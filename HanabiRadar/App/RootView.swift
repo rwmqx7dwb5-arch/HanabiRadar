@@ -41,8 +41,8 @@ struct RootView: View {
                 .buttonStyle(.bordered)
                 .accessibilityIdentifier("go-result")
 
-                NavigationLink("履歴（デモ）へ") {
-                    DemoHistoryScreen()
+                NavigationLink("履歴へ") {
+                    HistoryScreen()
                 }
                 .buttonStyle(.bordered)
                 .accessibilityIdentifier("go-history")
@@ -54,7 +54,7 @@ struct RootView: View {
                 .accessibilityIdentifier("go-map")
 
                 NavigationLink("設定へ") {
-                    SettingsView()
+                    SettingsScreen()
                 }
                 .buttonStyle(.bordered)
                 .accessibilityIdentifier("go-settings")

@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 import HanabiCapture
 
 /// Measurement screen. A single `AVCaptureSession` drives both the live camera preview and
@@ -8,6 +9,7 @@ import HanabiCapture
 /// candidates into an estimate and shows the result. Persisting the session follows next.
 struct MeasurementView: View {
     @StateObject private var model = MeasurementViewModel()
+    @Environment(\.modelContext) private var modelContext
     @AppStorage("unit.distanceMetric") private var metric = true
     @State private var flashActive = false
     @State private var bangActive = false
@@ -38,6 +40,13 @@ struct MeasurementView: View {
                 NavigationStack {
                     ResultView(estimate: result.estimate, uncertainty: result.uncertainty, metric: metric)
                         .toolbar {
+                            ToolbarItem(placement: .topBarLeading) {
+                                Button(model.saved ? "保存済み" : "履歴に保存") {
+                                    Task { await model.save(context: modelContext) }
+                                }
+                                .disabled(model.saved)
+                                .accessibilityIdentifier("save-to-history")
+                            }
                             ToolbarItem(placement: .confirmationAction) {
                                 Button("完了") { model.dismissResult() }
                             }
@@ -49,6 +58,9 @@ struct MeasurementView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text("発光と爆発音のペアが見つかりませんでした。カメラを花火に向けてもう一度お試しください。")
+        }
+        .alert("保存に失敗しました", isPresented: $model.saveError) {
+            Button("OK", role: .cancel) {}
         }
     }
 
