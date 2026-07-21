@@ -1,6 +1,61 @@
 {
   "sourceLanguage" : "ja",
   "strings" : {
+    "診断" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Diagnostics" } }
+      }
+    },
+    "診断（自己テスト）" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Diagnostics (self-test)" } }
+      }
+    },
+    "結果" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Result" } }
+      }
+    },
+    "判定" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Verdict" } }
+      }
+    },
+    "検出数" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Detections" } }
+      }
+    },
+    "距離誤差" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Distance error" } }
+      }
+    },
+    "水平誤差" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Horizontal error" } }
+      }
+    },
+    "高度誤差" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Altitude error" } }
+      }
+    },
+    "セルフテストを再実行" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Re-run self-test" } }
+      }
+    },
+    "実行中…" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Running…" } }
+      }
+    },
+    "合成シナリオ（既知の真値）で検出→対応付け→推定パイプラインを実行し、復元した位置を真値と比較する開発者向け自己診断です。実際の花火や実機センサーは不要です。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "A developer self-test that runs the detection → pairing → estimation pipeline on a synthetic scenario with known truth and compares the recovered position to it. No real fireworks or device sensors required." } }
+      }
+    },
     "気象データ" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Weather data" } }

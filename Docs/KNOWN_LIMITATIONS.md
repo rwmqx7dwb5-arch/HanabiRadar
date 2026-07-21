@@ -84,6 +84,17 @@
   パーソナライズは同意追従。所有者は Google UMP＋`ATTrackingManager` を `ConsentService` の実装として差し込むのみ。
   WeatherKit 帰属表示 UI は実装済み（上記・実 attribution 取得は entitlement 要）。
 
+## 診断・自己テスト（§23）
+
+- **診断（自己テスト）画面**（`DiagnosticsView`＋`DiagnosticsSelfTest`）を実装。合成シナリオ（既知の真値）で
+  **実際の検出→対応付け→推定パイプライン**（`BurstPipeline`→`BurstSolver`）を走らせ、復元位置を真値と比較して
+  PASS/FAIL を表示する。`DiagnosticsSelfTestTests`（真値復元）と UI スモーク（画面上で PASS 表示）で検証。実際の花火や
+  実機センサーは不要で、iOS CI 上で毎回パイプラインの回帰確認になる。
+- ただしこの自己テストは**合成入力**であり、`ReplayEngine`（録画済みセッションの再生・Capture 層で実装/テスト済み）を
+  使った**実録データの回帰再生**、および実機で収録した診断メディアの読み込み UI は未実装。開発者導線は
+  `AppLaunch.diagnosticsEnabled`（DEBUG は常時・Release は `-diagnostics`/UI テスト時のみ）でゲートしており、
+  一般ユーザー向けリリースでは表に出さない。
+
 ## この開発環境に由来する制限
 
 - 本リポジトリを作成した環境は **Windows** であり、**Swift ツールチェーンが無いため `swift build` /

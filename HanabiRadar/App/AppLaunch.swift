@@ -24,4 +24,14 @@ enum AppLaunch {
     static var forceMicrophoneDenied: Bool {
         useMockSensors && CommandLine.arguments.contains("-force-mic-denied")
     }
+
+    /// Whether the developer diagnostics entry (§23 self-test) is shown. Always on in DEBUG;
+    /// in Release it's hidden from ordinary users unless a UI test or `-diagnostics` enables it.
+    static var diagnosticsEnabled: Bool {
+        #if DEBUG
+        return true
+        #else
+        return isUITest || CommandLine.arguments.contains("-diagnostics")
+        #endif
+    }
 }
