@@ -10,6 +10,7 @@ struct RootView: View {
 
     var body: some View {
         NavigationStack {
+            ScrollView {
             VStack(spacing: 16) {
                 Text("Hanabi Radar")
                     .font(.largeTitle.bold())
@@ -64,13 +65,22 @@ struct RootView: View {
                 .buttonStyle(.bordered)
                 .accessibilityIdentifier("go-purchase")
 
+                if AppLaunch.diagnosticsEnabled {
+                    NavigationLink("診断（自己テスト）") {
+                        DiagnosticsView()
+                    }
+                    .buttonStyle(.bordered)
+                    .accessibilityIdentifier("go-diagnostics")
+                }
+
                 Text("この画面は骨組みです。測定・結果・地図・履歴のUIは後続で実装します。")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
             .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(maxWidth: .infinity)
+            }
         }
     }
 }
