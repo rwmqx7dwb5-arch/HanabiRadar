@@ -70,7 +70,8 @@ struct SessionAnalyzer {
             sightings[$0].pairingConfidence < sightings[$1].pairingConfidence
         }) ?? sightings.startIndex
         let best = sightings[bestIndex]
-        let estimate = estimateBySightingIndex[bestIndex] ?? await solver.solve(best.sighting, observerWeather: conditions.weather)
+        // Reuse the estimate already computed for this sighting above (always present).
+        guard let estimate = estimateBySightingIndex[bestIndex] else { return nil }
         let ray = solver.enuRay(for: best.sighting)
         let inputs = UncertaintyEstimator.Inputs.fromMeasurement(
             horizontalAccuracy: conditions.horizontalAccuracy,
