@@ -1,4 +1,5 @@
 import Foundation
+import AVFoundation
 import HanabiCore
 import HanabiCapture
 
@@ -14,7 +15,11 @@ final class MeasurementViewModel: ObservableObject {
     @Published private(set) var locationCount = 0
     /// The best measurement mode the current permissions allow (§21); drives the banner.
     @Published private(set) var capability: MeasurementCapability = .full
+    /// The live capture session for on-screen preview, or `nil` on the Simulator / mock
+    /// backend (no camera), where the view draws a placeholder instead.
+    @Published private(set) var previewSession: AVCaptureSession?
 
+    private var backend: UnifiedCaptureBackend?
     private var controller: UnifiedCaptureController?
     private var coordinator: CaptureCoordinator?
     private let logger: StructuredLogging = AppLogger()
@@ -38,7 +43,10 @@ final class MeasurementViewModel: ObservableObject {
             seedMockMotionLocation(coordinator)
         }
 
-        let controller = CaptureFactory.makeUnifiedController()
+        let backend = CaptureFactory.makeUnifiedBackend()
+        self.backend = backend
+        self.previewSession = (backend as? CameraPreviewSource)?.previewSession
+        let controller = UnifiedCaptureController(backend: backend)
         self.controller = controller
         captureState = String(localized: "開始中")
         Task { @MainActor [weak self] in
@@ -60,6 +68,8 @@ final class MeasurementViewModel: ObservableObject {
         coordinator = nil
         let controller = self.controller
         self.controller = nil
+        self.backend = nil
+        previewSession = nil
         captureState = String(localized: "停止")
         Task { await controller?.stop() }
         refreshMotionLocation()
