@@ -162,7 +162,7 @@ automated UI tests (see TESTING.md).
 
 ## 10. アイコン・アセット
 
-- **App Icon**: **ユーザー提供**の夜空＋花火デザイン（[`Assets.xcassets/AppIcon.appiconset`](../HanabiRadar/Resources/Assets.xcassets/AppIcon.appiconset)）。アイコン内表記「Hanabi Rader」はストア名と綴り要確認（[KNOWN_LIMITATIONS](KNOWN_LIMITATIONS.md)）。
+- **App Icon**: **ユーザー提供**の夜空＋花火デザイン（[`Assets.xcassets/AppIcon.appiconset`](../HanabiRadar/Resources/Assets.xcassets/AppIcon.appiconset)）。アイコン内表記は「Hanabi Radar」（Phase 6l で綴り修正済み）。
   1024×1024・不透過 RGB（α なし）。単一サイズを Xcode がダウンサンプルする構成。
 - **Accent Color**: 花火色（Light/Dark 対応・[`Assets.xcassets/AccentColor.colorset`](../HanabiRadar/Resources/Assets.xcassets/AccentColor.colorset)）。
 - **Support / Privacy Policy**: [`Docs/support/`](support/) の静的 HTML をホスティングして URL 化。
