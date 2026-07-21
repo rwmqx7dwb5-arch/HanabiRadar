@@ -1,6 +1,16 @@
 {
   "sourceLanguage" : "ja",
   "strings" : {
+    "発光" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Flash" } }
+      }
+    },
+    "爆発音" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Blast" } }
+      }
+    },
     "音声フレーム: %lld" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Audio frames: %lld" } }
