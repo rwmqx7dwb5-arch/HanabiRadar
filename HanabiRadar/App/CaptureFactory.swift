@@ -46,6 +46,11 @@ enum CaptureFactory {
                     camera: .authorized, microphone: .denied, location: .authorized, motion: .authorized
                 ))
             }
+            if AppLaunch.forceLocationDenied {
+                return StaticPermissionsService(SensorPermissions(
+                    camera: .authorized, microphone: .authorized, location: .denied, motion: .authorized
+                ))
+            }
             return StaticPermissionsService()
         }
         return DevicePermissionsService()

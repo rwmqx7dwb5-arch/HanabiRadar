@@ -13,6 +13,7 @@ struct MeasurementView: View {
     @AppStorage("unit.distanceMetric") private var metric = true
     @State private var flashActive = false
     @State private var bangActive = false
+    @State private var showingManualLocation = false
 
     var body: some View {
         ZStack {
@@ -22,6 +23,9 @@ struct MeasurementView: View {
             VStack(spacing: 12) {
                 if let banner = PermissionBanner.forCapability(model.capability) {
                     PermissionBannerView(banner: banner)
+                }
+                if model.capability == .manualLocation {
+                    manualLocationButton
                 }
                 detectionChips
                 statusCard
@@ -62,6 +66,28 @@ struct MeasurementView: View {
         .alert("保存に失敗しました", isPresented: $model.saveError) {
             Button("OK", role: .cancel) {}
         }
+        .sheet(isPresented: $showingManualLocation) {
+            ManualLocationView { coordinate in
+                model.setManualLocation(coordinate)
+            }
+        }
+    }
+
+    /// Shown when location is denied: lets the user set the observer position by hand so the
+    /// estimate still has an origin (§21).
+    private var manualLocationButton: some View {
+        Button {
+            showingManualLocation = true
+        } label: {
+            Label(
+                model.manualLocationSet ? "観測地点: 設定済み（変更）" : "観測地点を手動で設定",
+                systemImage: model.manualLocationSet ? "mappin.circle.fill" : "mappin.and.ellipse"
+            )
+            .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.bordered)
+        .tint(.white)
+        .accessibilityIdentifier("set-manual-location")
     }
 
     private var resultSheetBinding: Binding<Bool> {
