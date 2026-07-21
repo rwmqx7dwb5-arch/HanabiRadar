@@ -25,9 +25,24 @@ final class MeasurementViewModel: ObservableObject {
     /// backend (no camera), where the view draws a placeholder instead.
     @Published private(set) var previewSession: AVCaptureSession?
 
+    /// Flashes detected so far this session, and a token that ticks on each new one so the
+    /// view can pulse a live indicator.
+    @Published private(set) var flashCount = 0
+    @Published private(set) var flashEventID = 0
+    /// Bangs (audio transients) detected so far, with the same live-pulse token.
+    @Published private(set) var bangCount = 0
+    @Published private(set) var bangEventID = 0
+
     private var backend: UnifiedCaptureBackend?
     private var controller: UnifiedCaptureController?
     private var coordinator: CaptureCoordinator?
+    // Streaming detectors + the candidates/intrinsics accumulated for end-of-session
+    // pairing and estimation (wired in the next increment). Recreated each `start`.
+    private var flashDetector = FlashDetector()
+    private var audioDetector = AudioTransientDetector()
+    private var flashes: [FlashCandidate] = []
+    private var transients: [AudioTransientCandidate] = []
+    private var latestIntrinsics: CameraIntrinsics?
     private let logger: StructuredLogging = AppLogger()
     private let permissions: PermissionsReading
 
@@ -42,6 +57,7 @@ final class MeasurementViewModel: ObservableObject {
     }
 
     func start() {
+        resetDetection()
         let coordinator = CaptureFactory.makeMotionLocationCoordinator(logger: logger)
         self.coordinator = coordinator
         coordinator.start()
@@ -84,13 +100,37 @@ final class MeasurementViewModel: ObservableObject {
     private func handle(_ event: UnifiedEvent) {
         guard case .sample(let sample) = event else { return }
         switch sample.payload {
-        case .video(let luminance, _):
+        case .video(let luminance, let metadata):
             videoFrames += 1
             latestPeakLuminance = luminance.peakLuminance
+            latestIntrinsics = metadata.intrinsics
+            if let flash = flashDetector.process(luminance) {
+                flashes.append(flash)
+                flashCount = flashes.count
+                flashEventID += 1
+            }
         case .audio(let features):
             audioSamples += 1
             latestAudioEnergy = features.energy
+            if let transient = audioDetector.process(features) {
+                transients.append(transient)
+                bangCount = transients.count
+                bangEventID += 1
+            }
         }
+    }
+
+    /// Fresh detectors and empty accumulators for a new measurement session.
+    private func resetDetection() {
+        flashDetector = FlashDetector()
+        audioDetector = AudioTransientDetector()
+        flashes.removeAll()
+        transients.removeAll()
+        latestIntrinsics = nil
+        flashCount = 0
+        bangCount = 0
+        flashEventID = 0
+        bangEventID = 0
     }
 
     private func seedMockMotionLocation(_ coordinator: CaptureCoordinator) {

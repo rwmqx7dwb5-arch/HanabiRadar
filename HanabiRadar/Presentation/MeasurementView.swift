@@ -8,6 +8,8 @@ import HanabiCapture
 /// save flow are layered on in the following increments.
 struct MeasurementView: View {
     @StateObject private var model = MeasurementViewModel()
+    @State private var flashActive = false
+    @State private var bangActive = false
 
     var body: some View {
         ZStack {
@@ -18,6 +20,7 @@ struct MeasurementView: View {
                 if let banner = PermissionBanner.forCapability(model.capability) {
                     PermissionBannerView(banner: banner)
                 }
+                detectionChips
                 statusCard
                 Spacer()
                 Text("花火へカメラを向けて待ちます。発光と爆発音を自動で検出します。")
@@ -34,6 +37,53 @@ struct MeasurementView: View {
         .task { await model.assessPermissions() }
         .onAppear { model.start() }
         .onDisappear { model.stop() }
+    }
+
+    /// Live detection indicators: a flash chip and a bang chip, each showing the running
+    /// count and pulsing when a new detection arrives.
+    private var detectionChips: some View {
+        HStack(spacing: 12) {
+            detectionChip(symbol: "sparkles", label: "発光", count: model.flashCount,
+                          active: flashActive, tint: .yellow)
+                .accessibilityIdentifier("flash-chip")
+            detectionChip(symbol: "waveform", label: "爆発音", count: model.bangCount,
+                          active: bangActive, tint: .orange)
+                .accessibilityIdentifier("bang-chip")
+        }
+        .frame(maxWidth: .infinity)
+        .onChange(of: model.flashEventID) { _, _ in pulse($flashActive) }
+        .onChange(of: model.bangEventID) { _, _ in pulse($bangActive) }
+    }
+
+    private func detectionChip(
+        symbol: String, label: LocalizedStringKey, count: Int, active: Bool, tint: Color
+    ) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: symbol)
+                .font(.title3)
+                .foregroundStyle(active ? tint : .white.opacity(0.7))
+            VStack(alignment: .leading, spacing: 0) {
+                Text(label).font(.caption2).foregroundStyle(.white.opacity(0.75))
+                Text(verbatim: "\(count)").font(.title3.monospacedDigit().bold())
+                    .foregroundStyle(.white)
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(active ? tint.opacity(0.35) : .black.opacity(0.45), in: Capsule())
+        .overlay(Capsule().strokeBorder(active ? tint : .white.opacity(0.2), lineWidth: active ? 2 : 1))
+        .scaleEffect(active ? 1.08 : 1.0)
+        .animation(.easeOut(duration: 0.2), value: active)
+        .accessibilityElement(children: .combine)
+    }
+
+    /// Briefly lights a chip when a detection fires, then relaxes it.
+    private func pulse(_ active: Binding<Bool>) {
+        active.wrappedValue = true
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(450))
+            active.wrappedValue = false
+        }
     }
 
     /// The live camera feed, or a placeholder when there is no session (Simulator / mock).
