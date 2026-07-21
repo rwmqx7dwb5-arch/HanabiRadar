@@ -1,0 +1,47 @@
+name: TestFlight Release
+
+# Manual trigger only — a TestFlight upload should be deliberate, and it needs the signing
+# secrets below. It never runs on push/PR, so it stays dormant until the owner configures
+# the secrets and clicks "Run workflow". See Docs/TESTFLIGHT_CLOUD_RELEASE.md.
+on:
+  workflow_dispatch:
+
+jobs:
+  testflight:
+    name: Build & upload to TestFlight (Mac-free)
+    runs-on: macos-15
+    steps:
+      # Pin to a commit SHA before relying on this in production (supply-chain hardening).
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby + bundler cache
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build & upload to TestFlight
+        env:
+          # App Store Connect API key (authenticates match, gym upload, and pilot).
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_CONTENT: ${{ secrets.ASC_KEY_CONTENT }}        # base64 of the .p8 file
+          # App identity + signing team.
+          APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER }}
+          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+          # match: the private certs repo + its access token + the encryption password.
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          # Monotonic build number so each upload is unique.
+          BUILD_NUMBER: ${{ github.run_number }}
+          # Non-interactive fastlane.
+          FASTLANE_SKIP_UPDATE_CHECK: "1"
+          FASTLANE_HIDE_CHANGELOG: "1"
+        run: bundle exec fastlane beta

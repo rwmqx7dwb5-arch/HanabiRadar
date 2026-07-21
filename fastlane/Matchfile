@@ -1,0 +1,8 @@
+# `match` stores the encrypted Apple Distribution certificate + App Store provisioning
+# profile in a PRIVATE git repo, so any macOS CI runner can reuse the exact same identity
+# without a Mac. The repo URL, its access token, and the encryption password come from
+# GitHub Actions secrets (see Docs/TESTFLIGHT_CLOUD_RELEASE.md).
+git_url(ENV["MATCH_GIT_URL"])
+storage_mode("git")
+type("appstore")
+app_identifier([ENV["APP_IDENTIFIER"] || "com.example.hanabiradar"])
