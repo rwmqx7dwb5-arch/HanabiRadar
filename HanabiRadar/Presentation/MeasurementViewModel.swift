@@ -157,10 +157,14 @@ final class MeasurementViewModel: ObservableObject {
         }
         analyzing = true
         saved = false
+        // Size the position error bars from the session's ACTUAL GPS fixes (median of the
+        // recorded accuracies); fall back to typical hand-held values when no fix was logged
+        // (e.g. the location permission was denied and no manual point was set).
+        let accuracy = coordinator.timeline.locationAccuracySummary()
         let conditions = SessionAnalyzer.Conditions(
             weather: WeatherConditions(temperatureCelsius: 20),
-            horizontalAccuracy: 10,
-            verticalAccuracy: 15,
+            horizontalAccuracy: accuracy?.horizontal ?? 10,
+            verticalAccuracy: accuracy?.vertical ?? 15,
             headingAccuracyDegrees: 6,
             frameRate: 30
         )
