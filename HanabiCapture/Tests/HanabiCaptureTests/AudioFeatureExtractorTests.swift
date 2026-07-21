@@ -31,8 +31,10 @@ final class RealFFTTests: XCTestCase {
 final class AudioFeatureExtractorTests: XCTestCase {
 
     // 6400 Hz / 64-sample window → 100 Hz per bin, 400 Hz cutoff at bin 4.
+    // hopSize == windowSize keeps these feature tests on non-overlapping windows; the
+    // overlap behavior is covered separately below.
     private let config = AudioFeatureExtractor.Config(
-        sampleRate: 6_400, windowSize: 64, lowBandCutoffHz: 400, clippingThreshold: 0.98
+        sampleRate: 6_400, windowSize: 64, hopSize: 64, lowBandCutoffHz: 400, clippingThreshold: 0.98
     )
 
     private func tone(hz: Double, count: Int, amplitude: Float = 0.5) -> [Float] {
@@ -110,5 +112,46 @@ final class AudioFeatureExtractorTests: XCTestCase {
         let frames = ex.process([Float](repeating: 0, count: 64), startTime: CaptureTimestamp(seconds: 2))
         XCTAssertEqual(frames.count, 1)
         XCTAssertEqual(frames[0].time.seconds, 2.0, accuracy: 1e-9)
+    }
+}
+
+final class AudioFeatureExtractorOverlapTests: XCTestCase {
+
+    // 6400 Hz / 64-sample window, 32-sample hop → 50% overlap, 5 ms frame period.
+    private let config = AudioFeatureExtractor.Config(
+        sampleRate: 6_400, windowSize: 64, hopSize: 32, lowBandCutoffHz: 400, clippingThreshold: 0.98
+    )
+
+    func testDefaultHopIsHalfWindow() {
+        let auto = AudioFeatureExtractor.Config(sampleRate: 6_400, windowSize: 64)
+        XCTAssertEqual(auto.hopSize, 32)
+    }
+
+    func testHopIsClampedToValidStride() {
+        XCTAssertEqual(AudioFeatureExtractor.Config(windowSize: 64, hopSize: 999).hopSize, 64)  // no gaps
+        XCTAssertEqual(AudioFeatureExtractor.Config(windowSize: 64, hopSize: 0).hopSize, 1)     // floored
+    }
+
+    func testOverlappingWindowsEmitMoreFramesAndAdvanceByHop() {
+        let ex = AudioFeatureExtractor(config: config)
+        // 128 samples span 2 non-overlapping windows but 3 at 50% overlap (starts 0, 32, 64).
+        let frames = ex.process([Float](repeating: 0, count: 128), startTime: CaptureTimestamp(seconds: 0))
+        XCTAssertEqual(frames.count, 3)
+        XCTAssertEqual(frames[0].time.seconds, 0, accuracy: 1e-9)
+        XCTAssertEqual(frames[1].time.seconds, 32.0 / 6_400.0, accuracy: 1e-9)  // +5 ms, half a window
+        XCTAssertEqual(frames[2].time.seconds, 64.0 / 6_400.0, accuracy: 1e-9)
+    }
+
+    func testOverlapWindowingIsContinuousAcrossBatches() {
+        let ex = AudioFeatureExtractor(config: config)
+        // First batch yields one window; the 16 shared samples carry into the next window.
+        let first = ex.process([Float](repeating: 0, count: 80), startTime: CaptureTimestamp(seconds: 0))
+        XCTAssertEqual(first.count, 1)
+        XCTAssertEqual(first[0].time.seconds, 0, accuracy: 1e-9)
+        // The next batch continues on the same hop grid (times anchored at the first sample).
+        let second = ex.process([Float](repeating: 0, count: 48), startTime: CaptureTimestamp(seconds: 1))
+        XCTAssertEqual(second.count, 2)
+        XCTAssertEqual(second[0].time.seconds, 32.0 / 6_400.0, accuracy: 1e-9)
+        XCTAssertEqual(second[1].time.seconds, 64.0 / 6_400.0, accuracy: 1e-9)
     }
 }

@@ -1,9 +1,10 @@
 import Foundation
 
 /// Pure audio feature extraction for the bang detector. Fed batches of mono PCM samples on
-/// the capture clock, it emits one `AudioFeatureFrame` per non-overlapping window with the
-/// short-time energy, low-band energy (fireworks are low-frequency-heavy), spectral flux
-/// (onset sharpness) and clipping fraction the detector consumes.
+/// the capture clock, it emits one `AudioFeatureFrame` per window (overlapping by default, so
+/// onset timestamps land on a finer grid) with the short-time energy, low-band energy
+/// (fireworks are low-frequency-heavy), spectral flux (onset sharpness) and clipping fraction
+/// the detector consumes.
 ///
 /// Energy and low-band energy are drawn from the same Hann-windowed magnitude spectrum, so
 /// their ratio is a meaningful 0...1 "boominess". A small in-Swift FFT keeps the whole thing
@@ -14,19 +15,28 @@ public final class AudioFeatureExtractor {
         public var sampleRate: Double
         /// FFT window length; must be a power of two.
         public var windowSize: Int
+        /// Stride between consecutive windows, in samples. A hop smaller than `windowSize`
+        /// overlaps the windows, so onset/peak timestamps land on a finer grid (the frame
+        /// period is `hopSize / sampleRate`). Clamped to `1...windowSize` in `init`.
+        public var hopSize: Int
         /// Upper edge of the low band, in hertz.
         public var lowBandCutoffHz: Double
         /// |sample| at or above this counts as clipped.
         public var clippingThreshold: Float
 
+        /// - Parameter hopSize: pass `nil` for 50% overlap (`windowSize / 2`), the default that
+        ///   halves the frame period for tighter bang timing. Pass `windowSize` for the old
+        ///   non-overlapping behavior.
         public init(
             sampleRate: Double = 48_000,
             windowSize: Int = 1_024,
+            hopSize: Int? = nil,
             lowBandCutoffHz: Double = 400,
             clippingThreshold: Float = 0.98
         ) {
             self.sampleRate = sampleRate
             self.windowSize = windowSize
+            self.hopSize = Swift.min(Swift.max(1, hopSize ?? windowSize / 2), Swift.max(1, windowSize))
             self.lowBandCutoffHz = lowBandCutoffHz
             self.clippingThreshold = clippingThreshold
         }
@@ -36,15 +46,18 @@ public final class AudioFeatureExtractor {
     private var pending: [Float] = []
     private var previousSpectrum: [Double] = []
     private var referenceTime: CaptureTimestamp?
-    private var samplesEmitted = 0
+    /// Absolute sample index (since `referenceTime`) of the next window's first sample; the
+    /// window timestamp is derived from it, so it advances by the hop, not the window length.
+    private var nextWindowStart = 0
 
     public init(config: Config = Config()) {
         self.config = config
     }
 
     /// Feeds a batch of mono PCM samples whose first sample is at `startTime` on the capture
-    /// clock, returning one frame per complete window. Leftover samples are buffered for the
-    /// next call so the stream is windowed continuously.
+    /// clock, returning one frame per complete window. Consecutive windows advance by the hop
+    /// (overlapping when `hopSize < windowSize`); the samples they still share are kept
+    /// buffered for the next call so the stream is windowed continuously.
     public func process(_ samples: [Float], startTime: CaptureTimestamp) -> [AudioFeatureFrame] {
         if referenceTime == nil {
             referenceTime = startTime
@@ -54,13 +67,14 @@ public final class AudioFeatureExtractor {
         var frames: [AudioFeatureFrame] = []
         let n = config.windowSize
         guard n >= 2 else { return frames }
+        let hop = config.hopSize
         let base = referenceTime?.seconds ?? startTime.seconds
         while pending.count >= n {
             let window = Array(pending[0..<n])
-            pending.removeFirst(n)
-            let time = CaptureTimestamp(seconds: base + Double(samplesEmitted) / config.sampleRate)
+            let time = CaptureTimestamp(seconds: base + Double(nextWindowStart) / config.sampleRate)
             frames.append(makeFrame(window, time: time))
-            samplesEmitted += n
+            pending.removeFirst(hop)
+            nextWindowStart += hop
         }
         return frames
     }
@@ -70,7 +84,7 @@ public final class AudioFeatureExtractor {
         pending.removeAll()
         previousSpectrum.removeAll()
         referenceTime = nil
-        samplesEmitted = 0
+        nextWindowStart = 0
     }
 
     private func makeFrame(_ window: [Float], time: CaptureTimestamp) -> AudioFeatureFrame {
