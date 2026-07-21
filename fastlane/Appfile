@@ -1,0 +1,4 @@
+# App identity for fastlane. The team is inferred from the App Store Connect API key, so no
+# Apple ID login (and no 2FA) is needed. Override the bundle id with the APP_IDENTIFIER
+# secret — `com.example.hanabiradar` is a placeholder and cannot be shipped.
+app_identifier(ENV["APP_IDENTIFIER"] || "com.example.hanabiradar")

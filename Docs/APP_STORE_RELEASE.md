@@ -1,8 +1,11 @@
 # APP_STORE_RELEASE
 
-委託書 §27 の提出準備。**アプリのビルド・署名・提出は macOS + Xcode + Apple Developer アカウント保有者
-（所有者側）の作業**である。ここでは所有者が使える下書きとチェックリストを提供する。名称・文言は公開前に
-商標・既存アプリとの衝突を確認して確定すること。
+委託書 §27 の提出準備。ここでは所有者が使える掲載素材の下書きとチェックリストを提供する。名称・文言は
+公開前に商標・既存アプリとの衝突を確認して確定すること。
+
+> **ビルド・署名・TestFlight 配信は Mac 不要**（GitHub Actions の macOS ランナー＋Fastlane＋ASC API キー）。
+> 手順と所有者が用意する鍵・secrets は [TESTFLIGHT_CLOUD_RELEASE.md](TESTFLIGHT_CLOUD_RELEASE.md) に集約。
+> 本ファイルは掲載素材（名称・文言・審査ノート・アイコン等）の下書きに専念する。
 
 > 掲載素材（名称・説明文 JA+EN・キーワード・審査ノート・App Privacy 回答・スクショ構成）の
 > 詳細下書きは [APP_STORE_LISTING.md](APP_STORE_LISTING.md) に集約。掲載用の静的ページは

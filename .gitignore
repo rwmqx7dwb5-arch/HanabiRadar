@@ -31,6 +31,16 @@ Secrets.xcconfig
 Ads.Release.xcconfig
 *.local.xcconfig
 
+# Signing secrets — never commit
+*.p8
+*.p12
+*.mobileprovision
+*.cer
+.env
+.env.*
+
 # Fastlane / tooling artifacts
 fastlane/report.xml
+fastlane/README.md
+fastlane/test_output/
 fastlane/screenshots/**/*.png
