@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 import HanabiCore
 
 /// Lists saved measurement sessions (§16.4). Thin: it renders passed-in records and
@@ -46,6 +47,23 @@ struct HistoryView: View {
             }
         }
         .padding(.vertical, 2)
+    }
+}
+
+/// The live history screen, backed by the SwiftData store. `@Query` keeps the list in sync
+/// as sessions are saved or deleted; deletions go straight through the model context (the
+/// free-tier retention limit is enforced by `SessionStore` at save time).
+struct HistoryScreen: View {
+    @Environment(\.modelContext) private var context
+    @Query(sort: \MeasurementSessionRecord.startedAt, order: .reverse)
+    private var sessions: [MeasurementSessionRecord]
+    @AppStorage("unit.distanceMetric") private var metric = true
+
+    var body: some View {
+        HistoryView(sessions: sessions, metric: metric) { record in
+            context.delete(record)
+            try? context.save()
+        }
     }
 }
 

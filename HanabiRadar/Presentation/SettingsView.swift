@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 /// Settings: unit preferences (§16.5, §26 の km/mi・℃/℉ 切替), a privacy summary, and an
 /// optional destructive "delete all data" action (§20). Unit toggles are stored in
@@ -60,6 +61,18 @@ struct SettingsView: View {
         }
         .navigationTitle("設定")
         .accessibilityIdentifier("settings-view")
+    }
+}
+
+/// The live settings screen: wires "delete all data" to the SwiftData store so the row
+/// appears and actually clears saved history.
+struct SettingsScreen: View {
+    @Environment(\.modelContext) private var context
+
+    var body: some View {
+        SettingsView(onDeleteAllData: {
+            try? SessionStore(context: context, retentionLimit: nil).deleteAll()
+        })
     }
 }
 

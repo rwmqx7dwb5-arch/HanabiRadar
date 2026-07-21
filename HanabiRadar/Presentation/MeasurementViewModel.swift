@@ -1,5 +1,7 @@
 import Foundation
 import AVFoundation
+import UIKit
+import SwiftData
 import HanabiCore
 import HanabiCapture
 
@@ -39,6 +41,10 @@ final class MeasurementViewModel: ObservableObject {
     @Published private(set) var analyzing = false
     /// Drives a "couldn't detect a burst" alert; settable so the alert can dismiss it.
     @Published var analysisError = false
+    /// True once the current result has been saved to history (disables the save button).
+    @Published private(set) var saved = false
+    /// Drives a "couldn't save" alert; settable so the alert can dismiss it.
+    @Published var saveError = false
 
     private var backend: UnifiedCaptureBackend?
     private var controller: UnifiedCaptureController?
@@ -50,11 +56,17 @@ final class MeasurementViewModel: ObservableObject {
     private var flashes: [FlashCandidate] = []
     private var transients: [AudioTransientCandidate] = []
     private var latestIntrinsics: CameraIntrinsics?
+    private var sessionStartedAt = Date()
     private let logger: StructuredLogging = AppLogger()
     private let permissions: PermissionsReading
+    private let purchaseService: PurchaseService
 
-    init(permissions: PermissionsReading = CaptureFactory.makePermissionsService()) {
+    init(
+        permissions: PermissionsReading = CaptureFactory.makePermissionsService(),
+        purchaseService: PurchaseService = StoreKitPurchaseService()
+    ) {
         self.permissions = permissions
+        self.purchaseService = purchaseService
     }
 
     /// Reads current sensor authorization and updates `capability`. Called on appear so a
@@ -65,6 +77,7 @@ final class MeasurementViewModel: ObservableObject {
 
     func start() {
         resetDetection()
+        sessionStartedAt = Date()
         let coordinator = CaptureFactory.makeMotionLocationCoordinator(logger: logger)
         self.coordinator = coordinator
         coordinator.start()
@@ -136,6 +149,7 @@ final class MeasurementViewModel: ObservableObject {
             return
         }
         analyzing = true
+        saved = false
         let conditions = SessionAnalyzer.Conditions(
             weather: WeatherConditions(temperatureCelsius: 20),
             horizontalAccuracy: 10,
@@ -162,6 +176,33 @@ final class MeasurementViewModel: ObservableObject {
         analysis = nil
     }
 
+    /// Persists the current result's session summary to history (§16.4). Retention follows
+    /// the tier: premium is unlimited, free keeps the most recent few (§18). Idempotent per
+    /// result (the button disables once saved).
+    func save(context: ModelContext) async {
+        guard let result = analysis, !saved else { return }
+        let premium = await purchaseService.isPremium()
+        let store = SessionStore(context: context, retentionLimit: premium ? nil : 3)
+        let record = MeasurementSessionRecord.from(
+            summary: result.summary,
+            observer: result.observer,
+            startedAt: sessionStartedAt,
+            endedAt: Date(),
+            deviceModel: UIDevice.current.model,
+            appVersion: Self.appVersion
+        )
+        do {
+            try store.save(record)
+            saved = true
+        } catch {
+            saveError = true
+        }
+    }
+
+    private static var appVersion: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
+    }
+
     /// Fresh detectors and empty accumulators for a new measurement session.
     private func resetDetection() {
         flashDetector = FlashDetector()
@@ -173,6 +214,7 @@ final class MeasurementViewModel: ObservableObject {
         bangCount = 0
         flashEventID = 0
         bangEventID = 0
+        saved = false
     }
 
     private func seedMockMotionLocation(_ coordinator: CaptureCoordinator) {
