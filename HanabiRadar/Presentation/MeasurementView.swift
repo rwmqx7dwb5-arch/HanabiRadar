@@ -66,15 +66,11 @@ struct MeasurementView: View {
         .alert("保存に失敗しました", isPresented: $model.saveError) {
             Button("OK", role: .cancel) {}
         }
-        .sheet(isPresented: $showingManualLocation) {
-            ManualLocationView { coordinate in
-                model.setManualLocation(coordinate)
-            }
-        }
     }
 
     /// Shown when location is denied: lets the user set the observer position by hand so the
-    /// estimate still has an origin (§21).
+    /// estimate still has an origin (§21). The picker sheet is attached here (not on the root
+    /// view) so it never contends with the result sheet — two `.sheet`s on one view conflict.
     private var manualLocationButton: some View {
         Button {
             showingManualLocation = true
@@ -88,6 +84,11 @@ struct MeasurementView: View {
         .buttonStyle(.bordered)
         .tint(.white)
         .accessibilityIdentifier("set-manual-location")
+        .sheet(isPresented: $showingManualLocation) {
+            ManualLocationView { coordinate in
+                model.setManualLocation(coordinate)
+            }
+        }
     }
 
     private var resultSheetBinding: Binding<Bool> {
