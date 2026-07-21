@@ -1,6 +1,36 @@
 {
   "sourceLanguage" : "ja",
   "strings" : {
+    "観測地点を選ぶ" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Choose observer location" } }
+      }
+    },
+    "地図を動かして、立っている場所に十字を合わせてください。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pan the map so the crosshair sits where you are standing." } }
+      }
+    },
+    "標高 (m)" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Altitude (m)" } }
+      }
+    },
+    "この位置を使う" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Use this location" } }
+      }
+    },
+    "観測地点を手動で設定" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Set observer location manually" } }
+      }
+    },
+    "観測地点: 設定済み（変更）" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Observer location: set (change)" } }
+      }
+    },
     "履歴へ" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "History" } }

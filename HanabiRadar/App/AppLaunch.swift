@@ -25,6 +25,12 @@ enum AppLaunch {
         useMockSensors && CommandLine.arguments.contains("-force-mic-denied")
     }
 
+    /// UI-test hook: forces a location denial so the manual-location-input flow (§21) can be
+    /// smoke-tested in the Simulator. Only honored with mock sensors.
+    static var forceLocationDenied: Bool {
+        useMockSensors && CommandLine.arguments.contains("-force-location-denied")
+    }
+
     /// Whether the developer diagnostics entry (§23 self-test) is shown. Always on in DEBUG;
     /// in Release it's hidden from ordinary users unless a UI test or `-diagnostics` enables it.
     static var diagnosticsEnabled: Bool {

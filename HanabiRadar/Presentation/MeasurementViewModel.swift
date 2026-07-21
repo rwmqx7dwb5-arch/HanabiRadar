@@ -45,6 +45,8 @@ final class MeasurementViewModel: ObservableObject {
     @Published private(set) var saved = false
     /// Drives a "couldn't save" alert; settable so the alert can dismiss it.
     @Published var saveError = false
+    /// True once a manual observer location has been set (location-denied mode, §21).
+    @Published private(set) var manualLocationSet = false
 
     private var backend: UnifiedCaptureBackend?
     private var controller: UnifiedCaptureController?
@@ -56,6 +58,8 @@ final class MeasurementViewModel: ObservableObject {
     private var flashes: [FlashCandidate] = []
     private var transients: [AudioTransientCandidate] = []
     private var latestIntrinsics: CameraIntrinsics?
+    private var latestCaptureTime: CaptureTimestamp?
+    private var manualObserver: GeodeticCoordinate?
     private var sessionStartedAt = Date()
     private let logger: StructuredLogging = AppLogger()
     private let permissions: PermissionsReading
@@ -84,6 +88,8 @@ final class MeasurementViewModel: ObservableObject {
         if AppLaunch.useMockSensors {
             seedMockMotionLocation(coordinator)
         }
+        // A manual observer set in a previous appearance survives coordinator recreation.
+        ingestManualLocation()
 
         let backend = CaptureFactory.makeUnifiedBackend()
         self.backend = backend
@@ -119,6 +125,7 @@ final class MeasurementViewModel: ObservableObject {
 
     private func handle(_ event: UnifiedEvent) {
         guard case .sample(let sample) = event else { return }
+        latestCaptureTime = sample.time
         switch sample.payload {
         case .video(let luminance, let metadata):
             videoFrames += 1
@@ -174,6 +181,24 @@ final class MeasurementViewModel: ObservableObject {
 
     func dismissResult() {
         analysis = nil
+    }
+
+    /// Sets the observer location by hand (location-denied mode, §21) and feeds it into the
+    /// capture timeline as the observer fix, so the estimator can still produce absolute
+    /// positions. A manual-grade accuracy keeps the error bars honest.
+    func setManualLocation(_ coordinate: GeodeticCoordinate) {
+        manualObserver = coordinate
+        manualLocationSet = true
+        ingestManualLocation()
+    }
+
+    private func ingestManualLocation() {
+        guard let manualObserver, let coordinator else { return }
+        coordinator.ingest(location: Timed(
+            time: latestCaptureTime ?? CaptureTimestamp(seconds: 0),
+            value: LocationSample(coordinate: manualObserver, horizontalAccuracy: 50, verticalAccuracy: 50)
+        ))
+        refreshMotionLocation()
     }
 
     /// Persists the current result's session summary to history (§16.4). Retention follows
