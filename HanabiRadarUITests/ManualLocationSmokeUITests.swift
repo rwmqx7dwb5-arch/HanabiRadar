@@ -35,13 +35,13 @@ final class ManualLocationSmokeUITests: XCTestCase {
         )
         manualButton.tap()
 
+        // The picker's confirm button is a real control (reliably queryable, unlike a
+        // container view), so its presence proves the picker presented.
+        let confirm = element(app, "confirm-manual-location")
         XCTAssertTrue(
-            element(app, "manual-location-view").waitForExistence(timeout: 10),
+            confirm.waitForExistence(timeout: 10),
             "The manual-location picker should present"
         )
-
-        let confirm = element(app, "confirm-manual-location")
-        XCTAssertTrue(confirm.waitForExistence(timeout: 10))
         confirm.tap()
 
         // Back on the measurement screen, still running.
