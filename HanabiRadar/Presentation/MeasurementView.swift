@@ -4,10 +4,11 @@ import HanabiCapture
 /// Measurement screen. A single `AVCaptureSession` drives both the live camera preview and
 /// the capture pipeline (mock services in UI tests / Simulator, device services at
 /// runtime); motion + location come from the coordinator. The preview fills the screen with
-/// a translucent status overlay; live flash/bang detection and the detection → estimation →
-/// save flow are layered on in the following increments.
+/// a translucent overlay of live flash/bang detection; "解析する" pairs the session's
+/// candidates into an estimate and shows the result. Persisting the session follows next.
 struct MeasurementView: View {
     @StateObject private var model = MeasurementViewModel()
+    @AppStorage("unit.distanceMetric") private var metric = true
     @State private var flashActive = false
     @State private var bangActive = false
 
@@ -23,12 +24,7 @@ struct MeasurementView: View {
                 detectionChips
                 statusCard
                 Spacer()
-                Text("花火へカメラを向けて待ちます。発光と爆発音を自動で検出します。")
-                    .font(.footnote)
-                    .foregroundStyle(.white.opacity(0.85))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-                    .shadow(radius: 3)
+                analyzeControls
             }
             .padding()
         }
@@ -37,6 +33,53 @@ struct MeasurementView: View {
         .task { await model.assessPermissions() }
         .onAppear { model.start() }
         .onDisappear { model.stop() }
+        .sheet(isPresented: resultSheetBinding) {
+            if let result = model.analysis {
+                NavigationStack {
+                    ResultView(estimate: result.estimate, uncertainty: result.uncertainty, metric: metric)
+                        .toolbar {
+                            ToolbarItem(placement: .confirmationAction) {
+                                Button("完了") { model.dismissResult() }
+                            }
+                        }
+                }
+            }
+        }
+        .alert("花火を検出できませんでした", isPresented: $model.analysisError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("発光と爆発音のペアが見つかりませんでした。カメラを花火に向けてもう一度お試しください。")
+        }
+    }
+
+    private var resultSheetBinding: Binding<Bool> {
+        Binding(get: { model.analysis != nil }, set: { if !$0 { model.dismissResult() } })
+    }
+
+    /// The bottom action area: a hint plus the "analyze" button that runs detection →
+    /// estimation and shows the result.
+    private var analyzeControls: some View {
+        VStack(spacing: 8) {
+            Text("花火へカメラを向けて待ちます。発光と爆発音を自動で検出します。")
+                .font(.footnote)
+                .foregroundStyle(.white.opacity(0.85))
+                .multilineTextAlignment(.center)
+                .shadow(radius: 3)
+            Button {
+                Task { await model.analyze() }
+            } label: {
+                HStack(spacing: 8) {
+                    if model.analyzing { ProgressView().tint(.white) }
+                    Text(model.analyzing ? "解析中…" : "解析する")
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+            .disabled(!model.canAnalyze || model.analyzing)
+            .accessibilityIdentifier("analyze-button")
+        }
+        .padding(.horizontal)
     }
 
     /// Live detection indicators: a flash chip and a bang chip, each showing the running

@@ -33,6 +33,13 @@ final class MeasurementViewModel: ObservableObject {
     @Published private(set) var bangCount = 0
     @Published private(set) var bangEventID = 0
 
+    /// The analysis result for the result sheet, `nil` when not showing one.
+    @Published private(set) var analysis: SessionAnalyzer.Result?
+    /// True while the Monte Carlo analysis runs.
+    @Published private(set) var analyzing = false
+    /// Drives a "couldn't detect a burst" alert; settable so the alert can dismiss it.
+    @Published var analysisError = false
+
     private var backend: UnifiedCaptureBackend?
     private var controller: UnifiedCaptureController?
     private var coordinator: CaptureCoordinator?
@@ -118,6 +125,41 @@ final class MeasurementViewModel: ObservableObject {
                 bangEventID += 1
             }
         }
+    }
+
+    /// Pairs the accumulated candidates into sightings and estimates the most confident
+    /// burst (§ detection → estimation → result). Presents the result sheet, or raises the
+    /// "couldn't detect a burst" alert when nothing pairs.
+    func analyze() async {
+        guard let coordinator, let intrinsics = latestIntrinsics else {
+            analysisError = true
+            return
+        }
+        analyzing = true
+        let conditions = SessionAnalyzer.Conditions(
+            weather: WeatherConditions(temperatureCelsius: 20),
+            horizontalAccuracy: 10,
+            verticalAccuracy: 15,
+            headingAccuracyDegrees: 6,
+            frameRate: 30
+        )
+        let result = await SessionAnalyzer().analyze(
+            flashes: flashes, transients: transients,
+            timeline: coordinator.timeline, intrinsics: intrinsics, conditions: conditions
+        )
+        analyzing = false
+        if let result {
+            analysis = result
+        } else {
+            analysisError = true
+        }
+    }
+
+    /// Whether there is anything to analyze (both a flash and a bang were seen).
+    var canAnalyze: Bool { flashCount > 0 && bangCount > 0 }
+
+    func dismissResult() {
+        analysis = nil
     }
 
     /// Fresh detectors and empty accumulators for a new measurement session.

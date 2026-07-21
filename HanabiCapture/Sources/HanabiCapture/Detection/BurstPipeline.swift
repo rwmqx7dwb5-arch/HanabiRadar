@@ -59,6 +59,23 @@ public struct BurstPipeline: Sendable {
         let audioDetector = AudioTransientDetector(config: audioConfig)
         let flashes = frames.compactMap { flashDetector.process($0) }
         let transients = audio.compactMap { audioDetector.process($0) }
+        return sightings(
+            flashes: flashes, transients: transients,
+            timeline: timeline, intrinsics: intrinsics, cameraToDevice: cameraToDevice
+        )
+    }
+
+    /// The pairing + sighting-building tail of the pipeline, taking already-detected flash
+    /// and audio candidates. The live measurement screen runs the streaming detectors as
+    /// frames arrive and calls this at the end of a session, so real-time detection and the
+    /// final analysis share exactly this (tested) logic.
+    public func sightings(
+        flashes: [FlashCandidate],
+        transients: [AudioTransientCandidate],
+        timeline: SynchronizedTimeline,
+        intrinsics: CameraIntrinsics,
+        cameraToDevice: Quaternion = .identity
+    ) -> [DetectedSighting] {
         let annotated = EchoDetector(config: echoConfig).annotate(transients)
         let bursts = EventPairingEngine().pair(flashes: flashes, audio: annotated, config: pairingConfig)
 

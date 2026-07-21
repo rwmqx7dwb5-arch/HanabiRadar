@@ -1,6 +1,31 @@
 {
   "sourceLanguage" : "ja",
   "strings" : {
+    "解析する" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Analyze" } }
+      }
+    },
+    "解析中…" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Analyzing…" } }
+      }
+    },
+    "完了" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } }
+      }
+    },
+    "花火を検出できませんでした" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Couldn’t detect a burst" } }
+      }
+    },
+    "発光と爆発音のペアが見つかりませんでした。カメラを花火に向けてもう一度お試しください。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No flash-and-blast pair was found. Point the camera at the fireworks and try again." } }
+      }
+    },
     "発光" : {
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Flash" } }
