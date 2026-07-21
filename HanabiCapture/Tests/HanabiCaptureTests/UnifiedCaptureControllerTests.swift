@@ -74,7 +74,10 @@ final class UnifiedCaptureControllerTests: XCTestCase {
         )))
         backend.emit(.sample(UnifiedSample(
             time: CaptureTimestamp(seconds: 14.3),
-            payload: .audio(level: 0.9)
+            payload: .audio(AudioFeatureFrame(
+                time: CaptureTimestamp(seconds: 14.3),
+                energy: 0.9, spectralFlux: 0.3, lowBandEnergy: 0.5
+            ))
         )))
 
         let events = collector.snapshot()
