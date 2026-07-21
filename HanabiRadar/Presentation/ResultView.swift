@@ -55,7 +55,7 @@ struct ResultView: View {
                     .font(.footnote).foregroundStyle(.secondary)
             }
         }
-        .navigationTitle("結果（デモ）")
+        .navigationTitle("結果")
         .accessibilityIdentifier("result-view")
     }
 
