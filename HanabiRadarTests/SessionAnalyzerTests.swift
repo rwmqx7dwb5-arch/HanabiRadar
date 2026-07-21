@@ -64,6 +64,10 @@ final class SessionAnalyzerTests: XCTestCase {
         // The uncertainty interval is populated and brackets the estimate.
         XCTAssertGreaterThan(result.uncertainty.distanceHigh95, result.uncertainty.distanceLow95)
         XCTAssertGreaterThan(result.uncertainty.sampleCount, 0)
+        // The session summary aggregates every paired burst and carries the observer.
+        XCTAssertEqual(result.summary.burstCount, 1)
+        XCTAssertEqual(result.observer.latitude, 35.681, accuracy: 1e-6)
+        XCTAssertEqual(result.observer.longitude, 139.767, accuracy: 1e-6)
     }
 
     func testAnalyzeReturnsNilWithoutPairableCandidates() async {
