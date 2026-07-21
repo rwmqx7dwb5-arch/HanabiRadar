@@ -11,6 +11,9 @@ final class MeasurementViewModel: ObservableObject {
     @Published private(set) var captureState = String(localized: "準備中")
     @Published private(set) var videoFrames = 0
     @Published private(set) var audioSamples = 0
+    /// Peak luminance (0...1) of the most recent video frame, extracted live. A visible
+    /// signal that real luminance features are flowing (the flash detector reads the same).
+    @Published private(set) var latestPeakLuminance = 0.0
     @Published private(set) var attitudeCount = 0
     @Published private(set) var locationCount = 0
     /// The best measurement mode the current permissions allow (§21); drives the banner.
@@ -77,9 +80,11 @@ final class MeasurementViewModel: ObservableObject {
 
     private func handle(_ event: UnifiedEvent) {
         guard case .sample(let sample) = event else { return }
-        if sample.isVideo {
+        switch sample.payload {
+        case .video(let luminance, _):
             videoFrames += 1
-        } else if sample.isAudio {
+            latestPeakLuminance = luminance.peakLuminance
+        case .audio:
             audioSamples += 1
         }
     }
