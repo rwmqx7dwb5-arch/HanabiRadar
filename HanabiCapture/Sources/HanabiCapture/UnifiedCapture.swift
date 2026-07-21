@@ -3,11 +3,11 @@ import HanabiCore
 /// The payload of a unified capture sample.
 ///
 /// Video carries the per-frame luminance features the flash detector consumes plus the
-/// frame's camera metadata (intrinsics/lens); audio carries a level for now, replaced by
-/// full audio features in a following increment.
+/// frame's camera metadata (intrinsics/lens); audio carries the per-window features the
+/// bang detector consumes. Both ride the same session clock.
 public enum UnifiedSamplePayload: Sendable {
     case video(FrameLuminanceSample, metadata: FrameMetadata)
-    case audio(level: Double)
+    case audio(AudioFeatureFrame)
 }
 
 /// A video or audio sample. Its `time` is on the shared capture-session clock, so a

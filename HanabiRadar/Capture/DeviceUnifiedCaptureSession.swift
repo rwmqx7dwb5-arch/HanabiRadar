@@ -163,7 +163,11 @@ final class DeviceUnifiedCaptureSession: NSObject, UnifiedCaptureBackend, Camera
         if output === videoOutput {
             emit(.sample(UnifiedSample(time: time, payload: videoPayload(from: sampleBuffer, time: time))))
         } else {
-            emit(.sample(UnifiedSample(time: time, payload: .audio(level: 0))))
+            // Placeholder features until the PCM parsing + AudioFeatureExtractor are wired in
+            // the next increment; carries the shared-clock timestamp so pairing stays valid.
+            emit(.sample(UnifiedSample(time: time, payload: .audio(AudioFeatureFrame(
+                time: time, energy: 0, spectralFlux: 0, lowBandEnergy: 0
+            )))))
         }
     }
 
