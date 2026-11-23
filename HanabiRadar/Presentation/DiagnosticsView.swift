@@ -1,4 +1,6 @@
 import SwiftUI
+import UniformTypeIdentifiers
+import HanabiCore
 
 /// Developer diagnostics (§23): runs the real detection → estimation pipeline on a synthetic
 /// known-truth scenario and shows whether the engine recovers the burst within tolerance.
@@ -8,6 +10,15 @@ struct DiagnosticsView: View {
     @State private var result: DiagnosticsSelfTest.Result?
     @State private var running = false
     @State private var runCount = 0
+    @State private var importing = false
+    @State private var replayOutcome: ReplayOutcome?
+
+    /// What the last imported recording produced (or why it could not be replayed).
+    enum ReplayOutcome: Equatable {
+        case result(distance: Double, height: Double, sightings: Int)
+        case noPair
+        case failed(String)
+    }
 
     var body: some View {
         List {
@@ -19,6 +30,8 @@ struct DiagnosticsView: View {
                     .disabled(running)
                     .accessibilityIdentifier("run-selftest")
             }
+
+            replaySection
 
             if let result {
                 Section("結果") {
@@ -42,6 +55,63 @@ struct DiagnosticsView: View {
             running = true
             result = await DiagnosticsSelfTest.run()
             running = false
+        }
+    }
+
+    /// Regression replay (§23): re-run the real analysis on a recording file, and export the
+    /// built-in sample so the file format can be inspected or round-tripped on a device.
+    private var replaySection: some View {
+        Section("録画データの再生") {
+            Text("検出済みの発光・爆発音・姿勢・位置を記録した JSON を読み込み、本番と同じ解析を再実行します。")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            Button("録画ファイルを読み込む") { importing = true }
+                .accessibilityIdentifier("replay-import")
+            if let sample = SampleRecordingFile() {
+                ShareLink(item: sample, preview: SharePreview(sample.fileName)) {
+                    Label("サンプル録画を書き出す", systemImage: "square.and.arrow.up")
+                }
+                .accessibilityIdentifier("replay-export-sample")
+            }
+            switch replayOutcome {
+            case .result(let distance, let height, let sightings)?:
+                row("距離") { Text(verbatim: "\(fmt(distance)) m") }
+                row("高度") { Text(verbatim: "\(fmt(height)) m") }
+                row("検出数") { Text(verbatim: "\(sightings)") }
+            case .noPair?:
+                Text("発光と爆発音のペアが見つかりませんでした。").font(.footnote)
+            case .failed(let message)?:
+                Text(verbatim: message).font(.footnote).foregroundStyle(.red)
+            case nil:
+                EmptyView()
+            }
+        }
+        .fileImporter(isPresented: $importing, allowedContentTypes: [.json]) { picked in
+            Task { await handleImport(picked) }
+        }
+    }
+
+    private func handleImport(_ picked: Result<URL, Error>) async {
+        switch picked {
+        case .failure(let error):
+            replayOutcome = .failed(error.localizedDescription)
+        case .success(let url):
+            let scoped = url.startAccessingSecurityScopedResource()
+            defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+            do {
+                let measurement = try RecordedMeasurement.decode(Data(contentsOf: url))
+                if let analysis = await measurement.replay() {
+                    replayOutcome = .result(
+                        distance: analysis.estimate.lineOfSightDistance,
+                        height: analysis.estimate.burst.altitude,
+                        sightings: analysis.sightingCount
+                    )
+                } else {
+                    replayOutcome = .noPair
+                }
+            } catch {
+                replayOutcome = .failed(error.localizedDescription)
+            }
         }
     }
 

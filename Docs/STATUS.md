@@ -9,7 +9,8 @@
 - 永続化（SwiftData）、エクスポート（CSV/JSON/GeoJSON）、権限拒否モード、広告同意アーキテクチャ
 - 地上高: 国土地理院 標高API（既定）＋キャッシュ。海外フォールバック（Open-Meteo）は既定 OFF
 - 気象: 測定終了時に WeatherKit から観測点気象を取得（失敗時は固定値）、取得時のみ Apple 帰属表示
-- ローカライズ JA/EN（String Catalog）、Dynamic Type 対応のレイアウト、Reduce Motion 配慮、VoiceOver ラベル（測定画面）
+- 録画データの再生（診断画面: JSON 読込→本番と同じ解析を再実行、サンプル録画の書き出し）
+- ローカライズ JA/EN（String Catalog＋`Formatting` の値文字列も言語切替）、Dynamic Type 対応のレイアウト、Reduce Motion 配慮、VoiceOver ラベル（測定画面）
 
 ## 所有者側の作業（Mac / 実機 / アカウント必須）
 1. 実機で検証: カメラ内部行列・姿勢の符号・A/V 同期・マイク設定・30 分連続試験
@@ -20,7 +21,7 @@
 6. 商用リリース時の標高データ源の確認（Open-Meteo 無料枠は非商用限定）
 
 ## 既知の未実装
-- `Formatting` の値文字列の EN 化（`FormattingTests` がロケール依存のため後続でロケール非依存化）
-- 録画セッションの再生 UI（`ReplayEngine` 自体は実装・テスト済み）
+- `DemoEstimate` のデモ文字列の EN 化（ランチャの見本表示のみ）
+- 実機で収録した録画の自動書き出し（再生 UI と JSON 形式 `RecordedMeasurement` は実装済み。ライブ測定からの書き出しは未実装）
 
 詳細は [KNOWN_LIMITATIONS](KNOWN_LIMITATIONS.md)。

@@ -112,3 +112,6 @@
   結果画面に Apple の帰属表示（`WeatherAttributionView`）を併記する。失敗・entitlement 無し・モック時は従来の固定値（20℃）に
   フォールバックし、帰属表示は出さない。実取得は entitlement＋実機が必要で未検証。
 - 履歴画面に CSV/JSON/GeoJSON の共有メニュー（`ShareLink`）を追加。現状は課金ゲート無し（premium 限定にする場合は呼び出し側で制御）。
+
+- `Formatting` の値文字列は `Formatting.Language`（`.current` はバンドルの解決言語に追従、テストは明示指定）で JA/EN を切替。`DemoEstimate` のデモ文字列は日本語のまま。
+- 診断画面に録画再生（`RecordedMeasurement` JSON）を追加。検出済み候補（発光・爆発音）・姿勢・位置・内部行列から解析を再実行する形式で、生の映像/音声は含まない。ライブ測定からの自動書き出しは未実装。
