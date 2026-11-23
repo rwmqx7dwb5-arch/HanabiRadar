@@ -68,6 +68,8 @@ Users and Access → **Integrations** → App Store Connect API → 「＋」で
 | `MATCH_GIT_URL` | 証明書保管リポジトリの HTTPS URL |
 | `MATCH_GIT_BASIC_AUTHORIZATION` | `user:token` の base64 |
 | `MATCH_PASSWORD` | match 暗号化パスフレーズ（任意に決定） |
+| `ADMOB_APP_ID` | AdMob 本番アプリ ID（`ca-app-pub-…~…`）。未設定だとリリースレーンは失敗する |
+| `ADMOB_INTERSTITIAL_UNIT_ID` | AdMob 本番インタースティシャル広告ユニット ID（`ca-app-pub-…/…`） |
 
 ---
 

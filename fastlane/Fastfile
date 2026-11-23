@@ -53,7 +53,11 @@ platform :ios do
         "CODE_SIGN_STYLE=Manual",
         "CODE_SIGN_IDENTITY=Apple Distribution",
         "PROVISIONING_PROFILE_SPECIFIER=#{profile_name}",
-        "DEVELOPMENT_TEAM=#{ENV['DEVELOPMENT_TEAM']}"
+        "DEVELOPMENT_TEAM=#{ENV['DEVELOPMENT_TEAM']}",
+        # Production AdMob ids (GitHub secrets). Without them the Google TEST ids from
+        # project.yml stay in the build, which must never ship.
+        "ADMOB_APP_ID=#{ENV.fetch('ADMOB_APP_ID')}",
+        "ADMOB_INTERSTITIAL_UNIT_ID=#{ENV.fetch('ADMOB_INTERSTITIAL_UNIT_ID')}"
       ].join(" "),
       export_options: {
         provisioningProfiles: { APP_ID => profile_name }
