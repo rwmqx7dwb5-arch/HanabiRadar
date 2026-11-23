@@ -715,6 +715,11 @@
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Export (Premium)" } }
       }
+    },
+    "広告のプライバシー設定" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ad privacy settings" } }
+      }
     }
   },
   "version" : "1.0"

@@ -20,6 +20,9 @@ settings:
     ENABLE_USER_SCRIPT_SANDBOXING: "YES"
 
 packages:
+  GoogleMobileAds:
+    url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
+    exactVersion: 13.3.0   # 13.4+ requires Xcode 26.2; CI runs Xcode 16.4
   HanabiCore:
     path: HanabiCore
   HanabiCapture:
@@ -39,8 +42,14 @@ targets:
         product: HanabiCore
       - package: HanabiCapture
         product: HanabiCapture
+      - package: GoogleMobileAds
+        product: GoogleMobileAds
     settings:
       base:
+        # Google's official TEST ids. Release builds MUST override both (xcconfig / fastlane
+        # `ADMOB_APP_ID=... ADMOB_INTERSTITIAL_UNIT_ID=...`); never commit production ids (§29).
+        ADMOB_APP_ID: ca-app-pub-3940256099942544~1458002511
+        ADMOB_INTERSTITIAL_UNIT_ID: ca-app-pub-3940256099942544/4411468910
         PRODUCT_BUNDLE_IDENTIFIER: com.example.hanabiradar
         PRODUCT_NAME: HanabiRadar
         MARKETING_VERSION: "0.1.0"

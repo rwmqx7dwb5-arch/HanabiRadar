@@ -60,7 +60,10 @@ struct MeasurementView: View {
                                 .accessibilityIdentifier("save-to-history")
                             }
                             ToolbarItem(placement: .confirmationAction) {
-                                Button("完了") { model.dismissResult() }
+                                Button("完了") {
+                                    model.dismissResult()
+                                    Task { await AdsController.shared.show(.sessionEnd) }
+                                }
                             }
                         }
                 }

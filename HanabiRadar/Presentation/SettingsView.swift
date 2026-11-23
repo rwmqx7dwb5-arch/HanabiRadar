@@ -14,9 +14,19 @@ struct SettingsView: View {
     var onDeleteAllData: (() -> Void)?
 
     @State private var confirmingDelete = false
+    @State private var privacyOptionsRequired = false
 
     var body: some View {
         List {
+            if privacyOptionsRequired {
+                Section("プライバシー") {
+                    Button("広告のプライバシー設定") {
+                        Task { await UMPConsentService.presentPrivacyOptions() }
+                    }
+                    .accessibilityIdentifier("ad-privacy-options")
+                }
+            }
+
             Section("単位") {
                 Toggle("距離をメートル法 (km/m) で表示", isOn: $distanceMetric)
                 Toggle("気温を華氏 (°F) で表示", isOn: $temperatureFahrenheit)
@@ -61,6 +71,11 @@ struct SettingsView: View {
         }
         .navigationTitle("設定")
         .accessibilityIdentifier("settings-view")
+        .task {
+            if AppLaunch.useMockSensors == false {
+                privacyOptionsRequired = UMPConsentService.privacyOptionsRequired
+            }
+        }
     }
 }
 

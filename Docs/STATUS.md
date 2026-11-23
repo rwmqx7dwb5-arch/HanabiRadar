@@ -17,7 +17,7 @@
 1. 実機で検証: カメラ内部行列・姿勢の符号・A/V 同期・マイク設定・30 分連続試験
 2. WeatherKit capability + entitlement の有効化、実取得の確認
 3. StoreKit 商品登録（App Store Connect）、実購入/復元のサンドボックス確認
-4. Google UMP + ATT SDK を `ConsentService` に差し込む、広告 SDK 結線
+4. 本番の AdMob ID を build setting で上書き、App Store Connect の App Privacy 回答（広告 SDK 結線は実装済み・テスト ID）
 5. 署名・TestFlight（`Docs/TESTFLIGHT_CLOUD_RELEASE.md`）、App Store 掲載素材の最終確定
 6. 商用リリース時の標高データ源の確認（Open-Meteo 無料枠は非商用限定）
 

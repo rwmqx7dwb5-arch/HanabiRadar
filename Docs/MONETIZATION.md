@@ -50,10 +50,29 @@
 
 導入しない（§19.2）。
 
+## 広告 SDK 結線（実装済み・Phase 7）
+
+- **SDK**: Google Mobile Ads **13.3.0**（`project.yml` で exact 固定。13.4 以降は Xcode 26.2 が必要で、CI は Xcode 16.4）。UMP は同 SDK に同梱。
+- **同意**: `UMPConsentService`（UMP `ConsentInformation`/`ConsentForm` ＋ ATT）。UMP が広告不可なら `.denied`（SDK 非初期化）。
+  TCF の `IABTCF_PurposeConsents` の目的 1/3/4 ＋ ATT 許可のときのみ `.personalized`、それ以外は非パーソナライズ。
+  純粋な判定は `ConsentClassifier`（`ConsentClassifierTests`）。ATT は個別化が成立し得る場合のみ要求。
+- **表示**: `GoogleAdService`（インタースティシャル、非パーソナライズ時は `npa=1`）。`AdsController` が起動時に同意解決・SDK 初期化、
+  セッション終了（結果画面の「完了」）で `AdPolicy`（120 秒上限）＋同意ゲートを満たす場合のみ表示。プレミアムは同意要求も SDK 初期化もしない。
+  UI テスト／`-mock-sensors` は常に無効。
+- **ID**: `ADMOB_APP_ID` / `ADMOB_INTERSTITIAL_UNIT_ID`（`project.yml` の build setting → Info.plist）。**既定は Google 公式のテスト ID**。
+  リリースでは xcconfig / fastlane で本番 ID に上書きすること（リポジトリに本番 ID を置かない・§29）。
+- **プライバシー**: Info.plist に `NSUserTrackingUsageDescription`（JA/EN）と `SKAdNetworkItems`（Google 公式サンプルの全 ID）、
+  `PrivacyInfo.xcprivacy` を tracking=true／広告識別子の収集宣言に更新。設定画面に UMP の「広告のプライバシー設定」（必要地域のみ）。
+- **要確認（実機・アカウント）**: 本番 ID での配信、App Store Connect の App Privacy 回答（デバイス ID／広告データ、トラッキング）、EEA での同意フロー。
+
+## 無料版の書き出し
+
+- CSV/JSON/GeoJSON 書き出しはプレミアム限定。無料ユーザーは履歴画面の「書き出し（プレミアム）」から購入画面へ遷移する。
+
 ## 実装状況（正直）
 
 - 実装済み・CI 検証: プロトコル群、`StoreKitPurchaseService`（ビルド緑）、`MockPurchaseService`、`AdPolicy`、
   **同意アーキテクチャ（`ConsentService`/`ConsentGate`/`AdCoordinator`・`ConsentTests`）**、`.storekit` コンフィグ、
   **購入画面 UI（`PurchaseView` ＋ `PurchaseViewModel`・`PurchaseViewModelTests` ＋ UI スモーク・広告なし画面）**、テスト。
-- 未実装（所有者側）: **実 UMP/ATT SDK の結線**（同意アーキテクチャは実装済み＝SDK 差込のみ）、実広告 SDK、本番広告 ID、
+- 未実装（所有者側）: 本番広告 ID の設定、
   App Store Connect の商品登録・実購入/復元検証。

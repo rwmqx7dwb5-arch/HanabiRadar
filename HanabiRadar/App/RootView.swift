@@ -9,6 +9,11 @@ struct RootView: View {
     private let demo = DemoEstimate.compute()
 
     var body: some View {
+        content
+            .task { await AdsController.shared.configure() }
+    }
+
+    private var content: some View {
         NavigationStack {
             ScrollView {
             VStack(spacing: 16) {

@@ -3,4 +3,5 @@
 "NSCameraUsageDescription" = "花火の発光位置と方向を測定するためにカメラを使用します。";
 "NSMicrophoneUsageDescription" = "花火の発光から爆発音が届くまでの時間を測定するためにマイクを使用します。";
 "NSLocationWhenInUseUsageDescription" = "観測地点を基準に花火の位置を計算するために現在地を使用します。";
+"NSUserTrackingUsageDescription" = "パーソナライズされた広告を表示するために、広告用識別子の使用許可をお願いすることがあります。許可しなくてもアプリは同じ精度でご利用いただけます。";
 "NSMotionUsageDescription" = "iPhoneの向きと角度を測定するためにモーションセンサーを使用します。";
