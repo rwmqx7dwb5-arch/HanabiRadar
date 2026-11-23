@@ -710,6 +710,11 @@
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Export recording" } }
       }
+    },
+    "書き出し（プレミアム）" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Export (Premium)" } }
+      }
     }
   },
   "version" : "1.0"

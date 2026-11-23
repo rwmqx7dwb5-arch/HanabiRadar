@@ -85,6 +85,8 @@ targets:
 
 schemes:
   HanabiRadar:
+    run:
+      storeKitConfiguration: HanabiRadar.storekit
     build:
       targets:
         HanabiRadar: all
