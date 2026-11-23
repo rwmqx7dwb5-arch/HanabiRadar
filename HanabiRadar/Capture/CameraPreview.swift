@@ -38,10 +38,14 @@ struct CameraPreviewView: UIViewRepresentable {
     /// A `UIView` whose backing layer is an `AVCaptureVideoPreviewLayer`, so the preview
     /// tracks the view's bounds through Auto Layout with no manual frame bookkeeping.
     final class PreviewContainerView: UIView {
+        // swiftlint:disable:next static_over_final_class
         override class var layerClass: AnyClass { AVCaptureVideoPreviewLayer.self }
         var previewLayer: AVCaptureVideoPreviewLayer {
             // Safe: `layerClass` guarantees the backing layer's type.
-            layer as! AVCaptureVideoPreviewLayer
+            guard let preview = layer as? AVCaptureVideoPreviewLayer else {
+                preconditionFailure("layerClass must back the view with an AVCaptureVideoPreviewLayer")
+            }
+            return preview
         }
     }
 }

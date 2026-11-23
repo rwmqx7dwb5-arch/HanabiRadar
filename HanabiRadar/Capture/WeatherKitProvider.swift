@@ -20,8 +20,6 @@ import HanabiCore
 /// been exercised on a device yet — see Docs/KNOWN_LIMITATIONS.md.
 struct WeatherKitProvider: WeatherConditionsProviding {
 
-    init() {}
-
     func conditions(at coordinate: GeodeticCoordinate) async throws -> WeatherConditions {
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         // `WeatherService.shared` is used directly (not stored) so the provider stays a
