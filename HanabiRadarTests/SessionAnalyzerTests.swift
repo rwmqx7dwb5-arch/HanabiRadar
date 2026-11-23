@@ -79,4 +79,65 @@ final class SessionAnalyzerTests: XCTestCase {
         )
         XCTAssertNil(result)
     }
+
+    private struct LiveWeather: WeatherConditionsProviding {
+        func conditions(at coordinate: GeodeticCoordinate) async throws -> WeatherConditions {
+            WeatherConditions(temperatureCelsius: 30, relativeHumidity: 0.6, pressureHPa: 1010)
+        }
+    }
+
+    private struct BrokenWeather: WeatherConditionsProviding {
+        func conditions(at coordinate: GeodeticCoordinate) async throws -> WeatherConditions {
+            throw URLError(.notConnectedToInternet)
+        }
+    }
+
+    private struct GroundAt10m: ElevationProviding {
+        func elevation(at coordinate: GeodeticCoordinate) async throws -> ElevationSample? {
+            ElevationSample(elevation: 10, source: "test DEM")
+        }
+    }
+
+    func testLiveWeatherIsAppliedAndFlagged() async {
+        let scene = makeScenario()
+        let result = await SessionAnalyzer().analyze(
+            flashes: scene.flashes, transients: scene.transients,
+            timeline: scene.timeline, intrinsics: scene.intrinsics, conditions: conditions,
+            weatherProvider: LiveWeather()
+        )
+        XCTAssertEqual(result?.weatherLive, true)
+    }
+
+    func testWeatherFailureFallsBackWithoutFlag() async {
+        let scene = makeScenario()
+        let result = await SessionAnalyzer().analyze(
+            flashes: scene.flashes, transients: scene.transients,
+            timeline: scene.timeline, intrinsics: scene.intrinsics, conditions: conditions,
+            weatherProvider: BrokenWeather()
+        )
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result?.weatherLive, false)
+    }
+
+    func testElevationProviderYieldsHeightAboveGround() async {
+        let scene = makeScenario()
+        let result = await SessionAnalyzer().analyze(
+            flashes: scene.flashes, transients: scene.transients,
+            timeline: scene.timeline, intrinsics: scene.intrinsics, conditions: conditions,
+            elevationProvider: GroundAt10m()
+        )
+        XCTAssertEqual(result?.estimate.groundElevation, 10)
+        XCTAssertNotNil(result?.estimate.heightAboveGround)
+        XCTAssertEqual(result?.estimate.elevationSource, "test DEM")
+    }
+
+    func testWithTimeoutReturnsNilWhenOperationIsSlow() async {
+        let value: Int? = await SessionAnalyzer.withTimeout(seconds: 0.05) {
+            try await Task.sleep(nanoseconds: 2_000_000_000)
+            return 1
+        }
+        XCTAssertNil(value)
+        let fast: Int? = await SessionAnalyzer.withTimeout(seconds: 2) { 7 }
+        XCTAssertEqual(fast, 7)
+    }
 }

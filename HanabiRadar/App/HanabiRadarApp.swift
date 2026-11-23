@@ -20,9 +20,13 @@ struct HanabiRadarApp: App {
         } catch {
             // Fall back to an in-memory store so a corrupt or inaccessible on-disk store
             // never bricks the app; history simply won't persist across launches.
-            modelContainer = try! ModelContainer(
-                for: schema, configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-            )
+            do {
+                modelContainer = try ModelContainer(
+                    for: schema, configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+                )
+            } catch {
+                fatalError("Cannot create even an in-memory SwiftData store: \(error)")
+            }
         }
     }
 

@@ -655,6 +655,71 @@
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Couldn't complete the restore." } }
       }
+    },
+    "地図で見る" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "View on map" } }
+      }
+    },
+    "書き出し" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Export" } }
+      }
+    },
+    "発光と爆発音のペアから花火の位置を推定します" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Estimates the burst position from the flash and bang pair" } }
+      }
+    },
+    "カメラプレビュー" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Camera preview" } }
+      }
+    },
+    "録画データの再生" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Replay a recording" } }
+      }
+    },
+    "検出済みの発光・爆発音・姿勢・位置を記録した JSON を読み込み、本番と同じ解析を再実行します。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Load a JSON of recorded flashes, bangs, attitude and location and re-run the production analysis." } }
+      }
+    },
+    "録画ファイルを読み込む" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Load recording file" } }
+      }
+    },
+    "サンプル録画を書き出す" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Export sample recording" } }
+      }
+    },
+    "発光と爆発音のペアが見つかりませんでした。" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No flash/bang pair was found." } }
+      }
+    },
+    "高度" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Altitude" } }
+      }
+    },
+    "録画を書き出す" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Export recording" } }
+      }
+    },
+    "書き出し（プレミアム）" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Export (Premium)" } }
+      }
+    },
+    "広告のプライバシー設定" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ad privacy settings" } }
+      }
     }
   },
   "version" : "1.0"

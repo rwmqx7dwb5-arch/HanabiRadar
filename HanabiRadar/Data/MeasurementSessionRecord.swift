@@ -25,6 +25,7 @@ final class MeasurementSessionRecord {
     /// 95% radius of the most-populous launch-area cluster, if any.
     var largestClusterRadiusMeters: Double?
 
+    // swiftlint:disable:next function_parameter_count
     init(
         id: UUID = UUID(),
         startedAt: Date,

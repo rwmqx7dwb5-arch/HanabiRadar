@@ -37,6 +37,7 @@ final class BurstPipelineTests: XCTestCase {
                 brightCentroid: NormalizedPoint(x: 0.5, y: 0.5)
             ))
         }
+        // swiftlint:disable line_length
         frames.append(FrameLuminanceSample(time: CaptureTimestamp(seconds: flashOnset), meanLuminance: 0.12, peakLuminance: 0.7, brightArea: 0.05, brightCentroid: NormalizedPoint(x: 0.5, y: 0.5)))
         frames.append(FrameLuminanceSample(time: CaptureTimestamp(seconds: flashOnset + 0.01), meanLuminance: 0.13, peakLuminance: 0.9, brightArea: 0.06, brightCentroid: NormalizedPoint(x: 0.5, y: 0.5)))
         frames.append(FrameLuminanceSample(time: CaptureTimestamp(seconds: flashOnset + 0.02), meanLuminance: 0.11, peakLuminance: 0.4, brightArea: 0.03, brightCentroid: NormalizedPoint(x: 0.5, y: 0.5)))
@@ -46,6 +47,7 @@ final class BurstPipelineTests: XCTestCase {
         for i in 0..<30 {
             audio.append(AudioFeatureFrame(time: CaptureTimestamp(seconds: bangOnset - 0.30 + Double(i) * 0.01), energy: 0.01, spectralFlux: 0.01, lowBandEnergy: 0.005))
         }
+        // swiftlint:enable line_length
         audio.append(AudioFeatureFrame(time: CaptureTimestamp(seconds: bangOnset), energy: 0.5, spectralFlux: 0.3, lowBandEnergy: 0.3))
         audio.append(AudioFeatureFrame(time: CaptureTimestamp(seconds: bangOnset + 0.01), energy: 0.7, spectralFlux: 0.2, lowBandEnergy: 0.42))
         audio.append(AudioFeatureFrame(time: CaptureTimestamp(seconds: bangOnset + 0.02), energy: 0.2, spectralFlux: 0.05, lowBandEnergy: 0.1))

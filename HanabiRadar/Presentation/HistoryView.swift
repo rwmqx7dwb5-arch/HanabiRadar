@@ -8,6 +8,9 @@ import HanabiCore
 struct HistoryView: View {
     let sessions: [MeasurementSessionRecord]
     var metric = true
+    /// Export is a premium feature (§18); free users get a path to the purchase screen instead.
+    var isPremium = true
+    var purchaseService: PurchaseService = StoreKitPurchaseService()
     var onDelete: ((MeasurementSessionRecord) -> Void)?
 
     var body: some View {
@@ -30,6 +33,22 @@ struct HistoryView: View {
             }
         }
         .navigationTitle("履歴")
+        .toolbar {
+            if sessions.isEmpty == false {
+                ToolbarItem(placement: .topBarTrailing) {
+                    if isPremium {
+                        SessionExportMenu(sessions: sessions)
+                    } else {
+                        NavigationLink {
+                            PurchaseView(service: purchaseService)
+                        } label: {
+                            Label("書き出し（プレミアム）", systemImage: "lock")
+                        }
+                        .accessibilityIdentifier("export-locked")
+                    }
+                }
+            }
+        }
         .accessibilityIdentifier("history-view")
     }
 
@@ -58,12 +77,18 @@ struct HistoryScreen: View {
     @Query(sort: \MeasurementSessionRecord.startedAt, order: .reverse)
     private var sessions: [MeasurementSessionRecord]
     @AppStorage("unit.distanceMetric") private var metric = true
+    @State private var isPremium = false
+    private let purchaseService: PurchaseService =
+        AppLaunch.useMockSensors ? MockPurchaseService(premium: false) : StoreKitPurchaseService()
 
     var body: some View {
-        HistoryView(sessions: sessions, metric: metric) { record in
+        HistoryView(
+            sessions: sessions, metric: metric, isPremium: isPremium, purchaseService: purchaseService
+        ) { record in
             context.delete(record)
             try? context.save()
         }
+        .task { isPremium = await purchaseService.isPremium() }
     }
 }
 

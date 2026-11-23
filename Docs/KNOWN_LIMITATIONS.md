@@ -18,7 +18,7 @@
   「地上高」を表示しない（[SCIENCE_AND_MATH](SCIENCE_AND_MATH.md) §6）。
 - コアには地上高の解決機構（`ElevationProviding` 契約＋`BurstSolver` 最終段）が実装済みで、取得不能・失敗・
   `nil` のいずれでも MSL・相対高度のみを返し AGL を捏造しないことを `ElevationTests` で検証する。ただし
-  **実際の標高データ源（app 側 DEM アダプタ）は未接続**であり、それが接続されるまで AGL は提示されない。
+  app 側 DEM アダプタ（`ElevationProviders.swift`）を実装済み：**国土地理院 標高API（日本国内・無料・キー不要・出典は`ElevationSample.source` に格納）**を既定とし、`-----`（データ無し）は `nil`＝AGL 非表示として扱う。5 秒タイムアウト・約 11 m セル単位のキャッシュ（失敗は非キャッシュ）・UI テスト/`-mock-sensors` 時は無効。海外向けフォールバック（Open-Meteo/Copernicus DEM）は実装済みだが **既定 OFF**：無料枠は非商用限定のため、商用リリース時は有償プランか別データ源が必要。実ネットワーク経由の挙動は実機/CI 外で未検証（パース・URL・キャッシュ・フォールバックは `ElevationProvidersTests` で検証）。
 
 ## 実機で検証が必要な項目（未検証）
 
@@ -105,3 +105,13 @@
 
 - 距離・方向・最終位置の誤差は端末・環境に強く依存する。単一の絶対精度を宣伝文句にしない。
 - 内部検証では距離誤差・方向誤差・最終位置誤差を分けて評価し、悪い結果も隠さず原因と実測値を報告する。
+
+## Phase 7（WeatherKit 結線・書き出し UI）
+
+- 測定終了時に観測点の気象を WeatherKit から取得（6 秒で打ち切り）し、取得できた場合のみ音速補正と反復気象補正に使い、
+  結果画面に Apple の帰属表示（`WeatherAttributionView`）を併記する。失敗・entitlement 無し・モック時は従来の固定値（20℃）に
+  フォールバックし、帰属表示は出さない。実取得は entitlement＋実機が必要で未検証。
+- 履歴画面に CSV/JSON/GeoJSON の共有メニュー（`ShareLink`）を追加。現状は課金ゲート無し（premium 限定にする場合は呼び出し側で制御）。
+
+- `Formatting` の値文字列は `Formatting.Language`（`.current` はバンドルの解決言語に追従、テストは明示指定）で JA/EN を切替。`DemoEstimate` のデモ文字列は日本語のまま。
+- 診断画面に録画再生（`RecordedMeasurement` JSON）を追加。検出済み候補（発光・爆発音）・姿勢・位置・内部行列から解析を再実行する形式で、生の映像/音声は含まない。ライブ測定からの自動書き出しは未実装。

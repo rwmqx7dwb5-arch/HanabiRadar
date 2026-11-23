@@ -29,11 +29,12 @@ SwiftData、StoreKit、広告などのApple依存層は後続で構築します�
 | セッション集約 `SessionAggregator` / 表示ゲーティング `EstimateReporter` / 測定準備 `CalibrationAssessor` / 誤差σ写像 `Inputs.fromMeasurement` | **実装済み・CI緑** |
 | Python 参照オラクル＋クロス検証fixture（§24.2・音速/測地/レイ/位置復元を独立実装で照合） | **実装済み・CI緑（Swift↔Python 照合含む）** |
 | WeatherKit 実アダプタ（app 側 `WeatherKitProvider`） | **CIビルド緑（実行は entitlement+実機=所有者側）** |
-| DEM 標高アダプタ（app 側の具体実装。`ElevationProviding` 契約はコアに実装済み） | 未着手 |
+| 測定への気象結線（観測点の実測気象＋Apple帰属表示・失敗時フォールバック） | **実装済み・要CI**（`SessionAnalyzerTests`・実取得は entitlement+実機=所有者側） |
+| DEM 標高アダプタ（国土地理院 標高API既定＋Open-Meteo 海外フォールバック〔既定OFF〕＋キャッシュ） | **実装済み・要CI**（`ElevationProvidersTests`・実ネットワークは未検証） |
 | SwiftUI 画面（測定・結果・地図・履歴・設定・購入） | 骨組み＋結果/地図/履歴/設定デモ（`ResultView`/`BurstMapView`/`HistoryView`/`SettingsView`・単位切替が全画面反映）・**CIビルド＋単体＋UIスモーク緑** |
 | SwiftData 永続化（セッション要約＋無料枠保持上限）／履歴画面 | **実装済み・要CI（`SessionStore`＋`SessionStoreTests` インメモリ検証／`HistoryView` デモ・UIスモーク）** |
 | エクスポート（CSV/JSON/GeoJSON） | **実装済み・要CI（`SessionExporter`＋`SessionExporterTests`・GeoJSONは[経度,緯度]順）** |
-| 地図表示 / エクスポート共有UI / app 全体の ModelContainer 結線 | 未着手 |
+| 地図表示（結果画面からの導線）/ エクスポート共有UI（履歴）/ ModelContainer 結線 | **実装済み・要CI**（結果画面の「地図で見る」→`BurstMapView`、履歴の書き出しメニュー〔CSV/JSON/GeoJSON〕、`HanabiRadarApp` で結線済み） |
 | StoreKit 2 買い切り・広告（アーキテクチャ） | **実装済み・要CI（`PurchaseService`＋StoreKit2実装=ビルド緑／`MockPurchaseService`＋`AdPolicy` 単体緑・実購入/実広告は所有者側）** |
 | 購入画面UI（`PurchaseView`＋`PurchaseViewModel`：購入/復元/エンティトルメント・広告なし画面） | **実装済み・要CI**（`PurchaseViewModelTests`＋UIスモーク・`MockPurchaseService` 使用） |
 | 権限拒否時の限定モード（認可プローブ＋案内バナー・§21） | **実装済み・要CI**（`PermissionsReading`＝Camera/Mic/Location 実機認可＋Motion 可用性／`PermissionBanner` がモード別に案内／`PermissionGuidanceTests`・`PermissionMappingTests`＋degraded-mode UIスモーク・実機の実拒否挙動は要検証） |
@@ -47,7 +48,7 @@ SwiftData、StoreKit、広告などのApple依存層は後続で構築します�
 | Privacy Manifest（Required-Reason API 宣言）・StoreKit 構成ファイル | **実装済み**（`PrivacyInfo.xcprivacy`＝UserDefaults `CA92.1`＋SystemBootTime `35F9.1`／[`HanabiRadar.storekit`](HanabiRadar.storekit)） |
 | Info.plist 権限説明文の EN ローカライズ／UI 文字列のカタログ化 | **実装済み**（EN InfoPlist.strings＋UI 文字列 `Localizable.xcstrings` JA/EN・要 iOS CI）。`Formatting` の値文字列とデモ文字列は原文のまま（[KNOWN_LIMITATIONS](Docs/KNOWN_LIMITATIONS.md)） |
 
-各項目の対応状況は `Docs/STATUS.md`（作成予定）と本README下部のチェックリストで管理します。
+各項目の対応状況は `Docs/STATUS.md`と本README下部のチェックリストで管理します。
 
 ### ビルド環境についての重要事項
 

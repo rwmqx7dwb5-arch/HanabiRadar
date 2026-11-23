@@ -14,6 +14,7 @@ struct MeasurementView: View {
     @State private var flashActive = false
     @State private var bangActive = false
     @State private var showingManualLocation = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         ZStack {
@@ -42,7 +43,14 @@ struct MeasurementView: View {
         .sheet(isPresented: resultSheetBinding) {
             if let result = model.analysis {
                 NavigationStack {
-                    ResultView(estimate: result.estimate, uncertainty: result.uncertainty, metric: metric)
+                    ResultView(
+                        estimate: result.estimate, uncertainty: result.uncertainty, metric: metric,
+                        showsWeatherAttribution: result.weatherLive,
+                        mapModel: BurstMapModel.build(
+                            observer: result.observer, estimate: result.estimate, uncertainty: result.uncertainty
+                        ),
+                        recording: model.recording
+                    )
                         .toolbar {
                             ToolbarItem(placement: .topBarLeading) {
                                 Button(model.saved ? "保存済み" : "履歴に保存") {
@@ -52,7 +60,10 @@ struct MeasurementView: View {
                                 .accessibilityIdentifier("save-to-history")
                             }
                             ToolbarItem(placement: .confirmationAction) {
-                                Button("完了") { model.dismissResult() }
+                                Button("完了") {
+                                    model.dismissResult()
+                                    Task { await AdsController.shared.show(.sessionEnd) }
+                                }
                             }
                         }
                 }
@@ -116,6 +127,7 @@ struct MeasurementView: View {
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
             .disabled(!model.canAnalyze || model.analyzing)
+            .accessibilityHint(Text("発光と爆発音のペアから花火の位置を推定します"))
             .accessibilityIdentifier("analyze-button")
         }
         .padding(.horizontal)
@@ -154,9 +166,11 @@ struct MeasurementView: View {
         .padding(.vertical, 8)
         .background(active ? tint.opacity(0.35) : .black.opacity(0.45), in: Capsule())
         .overlay(Capsule().strokeBorder(active ? tint : .white.opacity(0.2), lineWidth: active ? 2 : 1))
-        .scaleEffect(active ? 1.08 : 1.0)
-        .animation(.easeOut(duration: 0.2), value: active)
+        .scaleEffect(active && !reduceMotion ? 1.08 : 1.0)
+        .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: active)
         .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text(label))
+        .accessibilityValue(Text(verbatim: "\(count)"))
     }
 
     /// Briefly lights a chip when a detection fires, then relaxes it.
@@ -176,6 +190,7 @@ struct MeasurementView: View {
                 cameraPlaceholder
             }
         }
+        .accessibilityLabel(Text("カメラプレビュー"))
         .accessibilityIdentifier("camera-preview")
     }
 

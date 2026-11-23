@@ -15,6 +15,12 @@ struct ResultView: View {
     let estimate: BurstEstimate
     let uncertainty: UncertaintyResult
     var metric = true
+    /// Set when live WeatherKit data fed the estimate: Apple requires its attribution beside it.
+    var showsWeatherAttribution = false
+    /// When present, offers a link to the result map (observer, burst, subpoint, 95% circle).
+    var mapModel: BurstMapModel?
+    /// When present, offers exporting this session as a replayable recording (§23).
+    var recording: RecordingFile?
 
     private var report: BurstReport {
         EstimateReporter.report(estimate: estimate, uncertainty: uncertainty)
@@ -48,6 +54,30 @@ struct ResultView: View {
                     Text("信頼度が低い / 範囲が広いため、鋭い点ではなく区域として表示しています。")
                         .font(.footnote).foregroundStyle(.secondary)
                 }
+            }
+
+            if let mapModel {
+                Section {
+                    NavigationLink {
+                        BurstMapView(model: mapModel)
+                    } label: {
+                        Label("地図で見る", systemImage: "map")
+                    }
+                    .accessibilityIdentifier("result-map-link")
+                }
+            }
+
+            if let recording {
+                Section {
+                    ShareLink(item: recording, preview: SharePreview(recording.fileName)) {
+                        Label("録画を書き出す", systemImage: "square.and.arrow.up")
+                    }
+                    .accessibilityIdentifier("result-export-recording")
+                }
+            }
+
+            if showsWeatherAttribution {
+                Section("気象データ") { WeatherAttributionView() }
             }
 
             Section {
