@@ -29,7 +29,7 @@ SwiftData、StoreKit、広告などのApple依存層は後続で構築します�
 | セッション集約 `SessionAggregator` / 表示ゲーティング `EstimateReporter` / 測定準備 `CalibrationAssessor` / 誤差σ写像 `Inputs.fromMeasurement` | **実装済み・CI緑** |
 | Python 参照オラクル＋クロス検証fixture（§24.2・音速/測地/レイ/位置復元を独立実装で照合） | **実装済み・CI緑（Swift↔Python 照合含む）** |
 | WeatherKit 実アダプタ（app 側 `WeatherKitProvider`） | **CIビルド緑（実行は entitlement+実機=所有者側）** |
-| DEM 標高アダプタ（app 側の具体実装。`ElevationProviding` 契約はコアに実装済み） | 未着手 |
+| DEM 標高アダプタ（国土地理院 標高API既定＋Open-Meteo 海外フォールバック〔既定OFF〕＋キャッシュ） | **実装済み・要CI**（`ElevationProvidersTests`・実ネットワークは未検証） |
 | SwiftUI 画面（測定・結果・地図・履歴・設定・購入） | 骨組み＋結果/地図/履歴/設定デモ（`ResultView`/`BurstMapView`/`HistoryView`/`SettingsView`・単位切替が全画面反映）・**CIビルド＋単体＋UIスモーク緑** |
 | SwiftData 永続化（セッション要約＋無料枠保持上限）／履歴画面 | **実装済み・要CI（`SessionStore`＋`SessionStoreTests` インメモリ検証／`HistoryView` デモ・UIスモーク）** |
 | エクスポート（CSV/JSON/GeoJSON） | **実装済み・要CI（`SessionExporter`＋`SessionExporterTests`・GeoJSONは[経度,緯度]順）** |

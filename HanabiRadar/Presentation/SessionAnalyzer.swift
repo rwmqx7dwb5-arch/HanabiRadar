@@ -39,7 +39,8 @@ struct SessionAnalyzer {
         transients: [AudioTransientCandidate],
         timeline: SynchronizedTimeline,
         intrinsics: CameraIntrinsics,
-        conditions: Conditions
+        conditions: Conditions,
+        elevationProvider: ElevationProviding? = nil
     ) async -> Result? {
         let sightings = BurstPipeline().sightings(
             flashes: flashes, transients: transients, timeline: timeline, intrinsics: intrinsics
@@ -53,7 +54,9 @@ struct SessionAnalyzer {
         var sessionBursts: [SessionBurst] = []
         var estimateBySightingIndex: [Int: BurstEstimate] = [:]
         for (index, detected) in sightings.enumerated() {
-            let estimate = await solver.solve(detected.sighting, observerWeather: conditions.weather)
+            let estimate = await solver.solve(
+                detected.sighting, observerWeather: conditions.weather, elevationProvider: elevationProvider
+            )
             estimateBySightingIndex[index] = estimate
             sessionBursts.append(SessionBurst(
                 id: "\(index)",

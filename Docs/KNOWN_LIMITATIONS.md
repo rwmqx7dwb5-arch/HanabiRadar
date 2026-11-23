@@ -18,7 +18,7 @@
   「地上高」を表示しない（[SCIENCE_AND_MATH](SCIENCE_AND_MATH.md) §6）。
 - コアには地上高の解決機構（`ElevationProviding` 契約＋`BurstSolver` 最終段）が実装済みで、取得不能・失敗・
   `nil` のいずれでも MSL・相対高度のみを返し AGL を捏造しないことを `ElevationTests` で検証する。ただし
-  **実際の標高データ源（app 側 DEM アダプタ）は未接続**であり、それが接続されるまで AGL は提示されない。
+  app 側 DEM アダプタ（`ElevationProviders.swift`）を実装済み：**国土地理院 標高API（日本国内・無料・キー不要・出典は`ElevationSample.source` に格納）**を既定とし、`-----`（データ無し）は `nil`＝AGL 非表示として扱う。5 秒タイムアウト・約 11 m セル単位のキャッシュ（失敗は非キャッシュ）・UI テスト/`-mock-sensors` 時は無効。海外向けフォールバック（Open-Meteo/Copernicus DEM）は実装済みだが **既定 OFF**：無料枠は非商用限定のため、商用リリース時は有償プランか別データ源が必要。実ネットワーク経由の挙動は実機/CI 外で未検証（パース・URL・キャッシュ・フォールバックは `ElevationProvidersTests` で検証）。
 
 ## 実機で検証が必要な項目（未検証）
 

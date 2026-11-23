@@ -170,7 +170,8 @@ final class MeasurementViewModel: ObservableObject {
         )
         let result = await SessionAnalyzer().analyze(
             flashes: flashes, transients: transients,
-            timeline: coordinator.timeline, intrinsics: intrinsics, conditions: conditions
+            timeline: coordinator.timeline, intrinsics: intrinsics, conditions: conditions,
+            elevationProvider: ElevationProviderFactory.makeDefault()
         )
         analyzing = false
         if let result {
