@@ -30,6 +30,11 @@ struct HistoryView: View {
             }
         }
         .navigationTitle("履歴")
+        .toolbar {
+            if sessions.isEmpty == false {
+                ToolbarItem(placement: .topBarTrailing) { SessionExportMenu(sessions: sessions) }
+            }
+        }
         .accessibilityIdentifier("history-view")
     }
 
