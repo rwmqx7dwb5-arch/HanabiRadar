@@ -655,6 +655,26 @@
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Couldn't complete the restore." } }
       }
+    },
+    "地図で見る" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "View on map" } }
+      }
+    },
+    "書き出し" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Export" } }
+      }
+    },
+    "発光と爆発音のペアから花火の位置を推定します" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Estimates the burst position from the flash and bang pair" } }
+      }
+    },
+    "カメラプレビュー" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Camera preview" } }
+      }
     }
   },
   "version" : "1.0"

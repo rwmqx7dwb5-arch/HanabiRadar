@@ -17,6 +17,8 @@ struct ResultView: View {
     var metric = true
     /// Set when live WeatherKit data fed the estimate: Apple requires its attribution beside it.
     var showsWeatherAttribution = false
+    /// When present, offers a link to the result map (observer, burst, subpoint, 95% circle).
+    var mapModel: BurstMapModel?
 
     private var report: BurstReport {
         EstimateReporter.report(estimate: estimate, uncertainty: uncertainty)
@@ -49,6 +51,17 @@ struct ResultView: View {
                 if report.horizontalPrecision == .areaOnly {
                     Text("信頼度が低い / 範囲が広いため、鋭い点ではなく区域として表示しています。")
                         .font(.footnote).foregroundStyle(.secondary)
+                }
+            }
+
+            if let mapModel {
+                Section {
+                    NavigationLink {
+                        BurstMapView(model: mapModel)
+                    } label: {
+                        Label("地図で見る", systemImage: "map")
+                    }
+                    .accessibilityIdentifier("result-map-link")
                 }
             }
 
