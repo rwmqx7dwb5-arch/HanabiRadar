@@ -42,7 +42,10 @@ struct MeasurementView: View {
         .sheet(isPresented: resultSheetBinding) {
             if let result = model.analysis {
                 NavigationStack {
-                    ResultView(estimate: result.estimate, uncertainty: result.uncertainty, metric: metric)
+                    ResultView(
+                        estimate: result.estimate, uncertainty: result.uncertainty, metric: metric,
+                        showsWeatherAttribution: result.weatherLive
+                    )
                         .toolbar {
                             ToolbarItem(placement: .topBarLeading) {
                                 Button(model.saved ? "保存済み" : "履歴に保存") {

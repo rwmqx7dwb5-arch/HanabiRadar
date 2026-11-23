@@ -15,6 +15,8 @@ struct ResultView: View {
     let estimate: BurstEstimate
     let uncertainty: UncertaintyResult
     var metric = true
+    /// Set when live WeatherKit data fed the estimate: Apple requires its attribution beside it.
+    var showsWeatherAttribution = false
 
     private var report: BurstReport {
         EstimateReporter.report(estimate: estimate, uncertainty: uncertainty)
@@ -48,6 +50,10 @@ struct ResultView: View {
                     Text("信頼度が低い / 範囲が広いため、鋭い点ではなく区域として表示しています。")
                         .font(.footnote).foregroundStyle(.secondary)
                 }
+            }
+
+            if showsWeatherAttribution {
+                Section("気象データ") { WeatherAttributionView() }
             }
 
             Section {

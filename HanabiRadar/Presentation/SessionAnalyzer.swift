@@ -20,6 +20,8 @@ struct SessionAnalyzer {
         var summary: SessionSummary
         /// Total sightings paired this session (the result shows the most confident one).
         var sightingCount: Int
+        /// True when live WeatherKit conditions were applied (so Apple's attribution must be shown).
+        var weatherLive: Bool = false
     }
 
     /// Live conditions used to size the error bars honestly (§14): the observer's weather
@@ -40,7 +42,8 @@ struct SessionAnalyzer {
         timeline: SynchronizedTimeline,
         intrinsics: CameraIntrinsics,
         conditions: Conditions,
-        elevationProvider: ElevationProviding? = nil
+        elevationProvider: ElevationProviding? = nil,
+        weatherProvider: WeatherConditionsProviding? = nil
     ) async -> Result? {
         let sightings = BurstPipeline().sightings(
             flashes: flashes, transients: transients, timeline: timeline, intrinsics: intrinsics
@@ -49,13 +52,27 @@ struct SessionAnalyzer {
 
         let solver = BurstSolver()
 
+        // Live conditions at the observer (bounded wait; any failure keeps the fallback values and
+        // the result then reports weather correction as not applied).
+        var observerWeather = conditions.weather
+        var weatherLive = false
+        if let weatherProvider, let first = sightings.first {
+            let observer = first.sighting.observer
+            if let live = await Self.withTimeout(seconds: 6, { try await weatherProvider.conditions(at: observer) }) {
+                observerWeather = live
+                weatherLive = true
+            }
+        }
+
         // Deterministic estimate for every burst (cheap: no weather/elevation providers),
         // aggregated into the session's launch-area summary.
         var sessionBursts: [SessionBurst] = []
         var estimateBySightingIndex: [Int: BurstEstimate] = [:]
         for (index, detected) in sightings.enumerated() {
             let estimate = await solver.solve(
-                detected.sighting, observerWeather: conditions.weather, elevationProvider: elevationProvider
+                detected.sighting, observerWeather: observerWeather,
+                weatherProvider: weatherLive ? weatherProvider : nil,
+                elevationProvider: elevationProvider
             )
             estimateBySightingIndex[index] = estimate
             sessionBursts.append(SessionBurst(
@@ -87,7 +104,7 @@ struct SessionAnalyzer {
             observer: best.sighting.observer,
             enuRay: ray,
             deltaT: best.sighting.deltaT,
-            weather: conditions.weather,
+            weather: observerWeather,
             inputs: inputs
         )
         return Result(
@@ -95,8 +112,25 @@ struct SessionAnalyzer {
             uncertainty: uncertainty,
             observer: best.sighting.observer,
             summary: summary,
-            sightingCount: sightings.count
+            sightingCount: sightings.count,
+            weatherLive: weatherLive
         )
+    }
+
+    /// Runs `operation`, giving up (returning nil) after `seconds` or on error.
+    static func withTimeout<T: Sendable>(
+        seconds: Double, _ operation: @escaping @Sendable () async throws -> T
+    ) async -> T? {
+        await withTaskGroup(of: T?.self) { group in
+            group.addTask { try? await operation() }
+            group.addTask {
+                try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+                return nil
+            }
+            let first = await group.next() ?? nil
+            group.cancelAll()
+            return first
+        }
     }
 
     /// A cheap per-burst confidence for clustering weight / gating: the product of the
