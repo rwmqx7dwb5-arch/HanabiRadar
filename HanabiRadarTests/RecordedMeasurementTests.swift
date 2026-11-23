@@ -38,4 +38,14 @@ final class RecordedMeasurementTests: XCTestCase {
     func testRejectsGarbage() {
         XCTAssertThrowsError(try RecordedMeasurement.decode(Data("nope".utf8)))
     }
+
+    func testLiveCaptureRebuildsTheSameRecording() {
+        let sample = RecordedMeasurement.syntheticSample()
+        let rebuilt = RecordedMeasurement.capture(
+            flashes: sample.flashCandidates(), transients: sample.transientCandidates(),
+            timeline: sample.timeline(), intrinsics: sample.cameraIntrinsics(),
+            temperatureCelsius: sample.temperatureCelsius, note: sample.note
+        )
+        XCTAssertEqual(rebuilt, sample)
+    }
 }

@@ -705,6 +705,11 @@
       "localizations" : {
         "en" : { "stringUnit" : { "state" : "translated", "value" : "Altitude" } }
       }
+    },
+    "録画を書き出す" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Export recording" } }
+      }
     }
   },
   "version" : "1.0"

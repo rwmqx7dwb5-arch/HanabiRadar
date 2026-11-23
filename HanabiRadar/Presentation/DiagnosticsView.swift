@@ -67,7 +67,9 @@ struct DiagnosticsView: View {
                 .foregroundStyle(.secondary)
             Button("録画ファイルを読み込む") { importing = true }
                 .accessibilityIdentifier("replay-import")
-            if let sample = SampleRecordingFile() {
+            if let sample = RecordingFile(
+                RecordedMeasurement.syntheticSample(), fileName: "hanabi-radar-sample-recording.json"
+            ) {
                 ShareLink(item: sample, preview: SharePreview(sample.fileName)) {
                     Label("サンプル録画を書き出す", systemImage: "square.and.arrow.up")
                 }

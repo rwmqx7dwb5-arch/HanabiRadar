@@ -22,8 +22,12 @@ enum DemoEstimate {
             iterations: 0
         )
         let distance = Formatting.distance(meters: estimate.lineOfSightDistance, metric: true)
-        return "距離 \(distance) / 仰角 \(String(format: "%.0f", estimate.elevationDegrees))°"
-            + " / 方位 \(String(format: "%.0f", estimate.azimuthDegrees))°"
+        let elevationText = String(format: "%.0f", estimate.elevationDegrees)
+        let azimuthText = String(format: "%.0f", estimate.azimuthDegrees)
+        if Formatting.Language.current == .en {
+            return "Distance \(distance) / Elevation \(elevationText)° / Azimuth \(azimuthText)°"
+        }
+        return "距離 \(distance) / 仰角 \(elevationText)° / 方位 \(azimuthText)°"
     }
 
     /// A fuller demo: a deterministic estimate plus its Monte Carlo uncertainty, so the

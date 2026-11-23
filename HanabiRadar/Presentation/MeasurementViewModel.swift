@@ -37,6 +37,8 @@ final class MeasurementViewModel: ObservableObject {
 
     /// The analysis result for the result sheet, `nil` when not showing one.
     @Published private(set) var analysis: SessionAnalyzer.Result?
+    /// The inputs of the last analysis as a replayable recording (exported from the result screen).
+    @Published private(set) var recording: RecordingFile?
     /// True while the Monte Carlo analysis runs.
     @Published private(set) var analyzing = false
     /// Drives a "couldn't detect a burst" alert; settable so the alert can dismiss it.
@@ -176,6 +178,14 @@ final class MeasurementViewModel: ObservableObject {
         )
         analyzing = false
         if let result {
+            recording = RecordingFile(
+                RecordedMeasurement.capture(
+                    flashes: flashes, transients: transients, timeline: coordinator.timeline,
+                    intrinsics: intrinsics, temperatureCelsius: conditions.weather.temperatureCelsius,
+                    note: "Live session \(ISO8601DateFormatter().string(from: sessionStartedAt))"
+                ),
+                fileName: "hanabi-radar-recording-\(Int(sessionStartedAt.timeIntervalSince1970)).json"
+            )
             analysis = result
         } else {
             analysisError = true

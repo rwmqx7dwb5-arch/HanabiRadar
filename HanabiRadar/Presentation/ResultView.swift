@@ -19,6 +19,8 @@ struct ResultView: View {
     var showsWeatherAttribution = false
     /// When present, offers a link to the result map (observer, burst, subpoint, 95% circle).
     var mapModel: BurstMapModel?
+    /// When present, offers exporting this session as a replayable recording (§23).
+    var recording: RecordingFile?
 
     private var report: BurstReport {
         EstimateReporter.report(estimate: estimate, uncertainty: uncertainty)
@@ -62,6 +64,15 @@ struct ResultView: View {
                         Label("地図で見る", systemImage: "map")
                     }
                     .accessibilityIdentifier("result-map-link")
+                }
+            }
+
+            if let recording {
+                Section {
+                    ShareLink(item: recording, preview: SharePreview(recording.fileName)) {
+                        Label("録画を書き出す", systemImage: "square.and.arrow.up")
+                    }
+                    .accessibilityIdentifier("result-export-recording")
                 }
             }
 

@@ -119,6 +119,54 @@ struct RecordedMeasurement: Codable, Equatable {
         )
     }
 
+    // MARK: Live recording
+
+    /// Snapshots a live session (the exact inputs `SessionAnalyzer` consumed) so it can be
+    /// exported and replayed later for regression. Heading samples are not part of the format
+    /// (the estimator derives orientation from the attitude quaternion).
+    static func capture(
+        flashes: [FlashCandidate],
+        transients: [AudioTransientCandidate],
+        timeline: SynchronizedTimeline,
+        intrinsics: CameraIntrinsics,
+        temperatureCelsius: Double,
+        note: String? = nil
+    ) -> RecordedMeasurement {
+        RecordedMeasurement(
+            note: note,
+            temperatureCelsius: temperatureCelsius,
+            intrinsics: Intrinsics(
+                fx: intrinsics.fx, fy: intrinsics.fy, cx: intrinsics.cx, cy: intrinsics.cy,
+                width: intrinsics.width, height: intrinsics.height
+            ),
+            attitudes: timeline.attitude.orderedItems.map {
+                Attitude(t: $0.time.seconds, w: $0.value.w, x: $0.value.x, y: $0.value.y, z: $0.value.z)
+            },
+            locations: timeline.location.orderedItems.map {
+                Location(
+                    t: $0.time.seconds, latitude: $0.value.coordinate.latitude,
+                    longitude: $0.value.coordinate.longitude, altitude: $0.value.coordinate.altitude,
+                    horizontalAccuracy: $0.value.horizontalAccuracy, verticalAccuracy: $0.value.verticalAccuracy
+                )
+            },
+            flashes: flashes.map {
+                Flash(
+                    onset: $0.onsetTime.seconds, peak: $0.peakTime.seconds,
+                    centroidX: $0.centroid.x, centroidY: $0.centroid.y,
+                    peakLuminance: $0.peakLuminance, brightArea: $0.brightArea,
+                    visualConfidence: $0.visualConfidence, atFrameEdge: $0.atFrameEdge
+                )
+            },
+            transients: transients.map {
+                Transient(
+                    onset: $0.onsetTime.seconds, peak: $0.peakTime.seconds, peakEnergy: $0.peakEnergy,
+                    transientConfidence: $0.transientConfidence, echoProbability: $0.echoProbability,
+                    clippingDetected: $0.clippingDetected
+                )
+            }
+        )
+    }
+
     // MARK: Sample recording
 
     /// The self-test scenario as a recording, so the file format can be exported, inspected
@@ -160,14 +208,15 @@ struct RecordedMeasurement: Codable, Equatable {
     }
 }
 
-/// A shareable JSON file of the synthetic sample recording.
-struct SampleRecordingFile: Transferable {
-    let fileName = "hanabi-radar-sample-recording.json"
+/// A shareable JSON recording file (the synthetic sample, or a live session's recording).
+struct RecordingFile: Transferable {
+    let fileName: String
     let data: Data
 
-    init?() {
-        guard let encoded = try? RecordedMeasurement.syntheticSample().encoded() else { return nil }
-        data = encoded
+    init?(_ measurement: RecordedMeasurement, fileName: String) {
+        guard let encoded = try? measurement.encoded() else { return nil }
+        self.fileName = fileName
+        self.data = encoded
     }
 
     static var transferRepresentation: some TransferRepresentation {
