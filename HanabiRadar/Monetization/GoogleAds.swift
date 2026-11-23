@@ -91,7 +91,7 @@ final class GoogleAdService: NSObject, AdService, FullScreenContentDelegate {
         self.personalized = personalized
         guard started == false, adUnitID.isEmpty == false else { return }
         started = true
-        MobileAds.shared.start()
+        await MobileAds.shared.start()
         await loadInterstitial()
     }
 

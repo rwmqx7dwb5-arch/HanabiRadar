@@ -46,10 +46,10 @@ struct MeasurementView: View {
                     ResultView(
                         estimate: result.estimate, uncertainty: result.uncertainty, metric: metric,
                         showsWeatherAttribution: result.weatherLive,
-                        recording: model.recording,
                         mapModel: BurstMapModel.build(
                             observer: result.observer, estimate: result.estimate, uncertainty: result.uncertainty
-                        )
+                        ),
+                        recording: model.recording
                     )
                         .toolbar {
                             ToolbarItem(placement: .topBarLeading) {
